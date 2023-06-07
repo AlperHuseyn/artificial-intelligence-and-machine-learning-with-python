@@ -12,6 +12,14 @@
 
 ---
 
+# Bootstrap Sampling
+- With replacement, draw 800-element random samples from the 1000-element sample. Repeat this process 1000 times to obtain 1000 bootstrap samples. Calculate the sample means of these bootstrap samples and store them.
+- Calculate a confidence interval for the population mean at a two-sided 95% confidence level based on the bootstrap sample means obtained. (You can use the np.quantile function for the quantile calculation.)
+- Calculate the population mean at a two-sided 95% confidence level based on the original 1000-element sample.
+Print the population mean, the bootstrap-based confidence interval, and the single-sample-based confidence interval.
+
+---
+
 # Binomial Distribution
 An important discrete distribution is called `binomial distribution`. The binomial distribution assumes that the result of a random experiment
 is either of two outcomes, success or failure. If the probability of success in the random experiment is `p`, the probability of failure is `(1 – p)`.
