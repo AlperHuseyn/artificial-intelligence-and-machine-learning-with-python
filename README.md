@@ -1,6 +1,6 @@
 # Artificial Intelligence and Machine Learning with Python
 
-Welcome to the **Artificial Intelligence and Machine Learning with Python** repository! This repository is a collection of notes and resources from a course on artificial intelligence (AI) and machine learning (ML) using Python offered by **`C and System Programmers Association`**.
+Welcome to the **Artificial Intelligence and Machine Learning with Python** repository! This repository is a collection of notes and resources from a course on artificial intelligence (AI) and machine learning (ML) using Python offered by [**`C and System Programmers Association`**](https://csystem.org/).
 
 Please note that this repository is not entirely my own work. The notes and resources included here are compiled from the course. The purpose of this repository is to provide a convenient and organized reference for those interested in AI and ML.
 
