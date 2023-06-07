@@ -13,7 +13,7 @@
 ---
 
 # Bootstrap Sampling
-- With replacement, draw 800-element random samples from the 1000-element sample. Repeat this process 1000 times to obtain 1000 bootstrap samples. Calculate the sample means of these bootstrap samples and store them.
+- With replacement, draw 800-element random samples from the 1000-element sample. Repeat this process 1000 times to obtain 1000 bootstrap samples. Calculate the sample means of these bootstrap samples and store them. Then, calculate the 0.975 and 0.025 quantile values from the mean values to create a confidence interval. 
 - Calculate a confidence interval for the population mean at a two-sided 95% confidence level based on the bootstrap sample means obtained. (You can use the np.quantile function for the quantile calculation.)
 - Calculate the population mean at a two-sided 95% confidence level based on the original 1000-element sample.
 Print the population mean, the bootstrap-based confidence interval, and the single-sample-based confidence interval.
