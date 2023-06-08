@@ -56,6 +56,6 @@ experimentally as follows:
 
 - Then, plot a graph using the `matplotlib.plot` function, with `k` values (from 0 to 1000) on the horizontal axis and probability values on the vertical axis, to check whether it resembles the normal distribution.
 
-- Using the `binom` singleton object in the `scipy.stats` module, obtain 1000 random values of `k` with `n` = 100 and `p` = 0.5. Plot a histogram of these values and check visually if it resembles the normal distribution. Then, perform the Shapiro-Wilk test on these values to determine their conformity with the normal distribution.
+- Using the `binom` singleton object in the `scipy.stats` module, obtain 1000 random values of `k` with `n` = 1000 and `p` = 0.5. Plot a histogram of these values and check visually if it resembles the normal distribution. Then, perform the Shapiro-Wilk test on these values to determine their conformity with the normal distribution.
 
 ----
