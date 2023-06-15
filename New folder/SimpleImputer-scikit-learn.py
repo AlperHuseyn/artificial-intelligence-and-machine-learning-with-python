@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from sklearn.impute import SimpleImputer
 
 # Load the Melbourne housing snapshot dataset
 melb_data = pd.read_csv('melb_data.csv')
@@ -29,22 +30,17 @@ print(f'Ratio of missing data in all rows: \n{row_missing_data_ratio:.2f}')
 print('-----------------------------------------')
 
 ######################
-# Imputation process #
+# Imputation process using skit-learn #
 ######################
 
-# Impute rounded mean into missing data for Car column
-rounded_mean_of_Car_column = np.round(melb_data['Car'].mean())
-melb_data['Car'].fillna(rounded_mean_of_Car_column, inplace=True)
+# Create SimpleImputer object
+melb_data_obj = SimpleImputer() # strategy:str, default = 'mean'
+# Impute rounded mean into missing data for Car and BuildingArea columns
+melb_data[['Car', 'BuildingArea']] = np.round(melb_data_obj.fit_transform(melb_data[['Car', 'BuildingArea']]))
 
-# Impute rounded mean into missing data for BuildingArea column
-rounded_mean_of_BuildingArea_column = np.round(melb_data['BuildingArea'].mean())
-melb_data['BuildingArea'].fillna(rounded_mean_of_BuildingArea_column, inplace=True)
-
-# Impute mode into missing data for YearBuilt column
-melb_data['YearBuilt'].fillna(melb_data['YearBuilt'].mode()[0], inplace=True)
-
-# Impute mode into missing data for CouncilArea column
-melb_data['CouncilArea'].fillna(melb_data['CouncilArea'].mode()[0], inplace=True)
+# Impute mode into missing data for YearBuilt and CouncilArea columns
+melb_data_obj.set_params(strategy='most_frequent')
+melb_data[['YearBuilt', 'CouncilArea']] = melb_data_obj.fit_transform(melb_data[['YearBuilt', 'CouncilArea']])
 
 # Checking there is no missing data left in the dataset
 print(f'Last check for any remaining missing data: {melb_data.isna().sum().sum()}')
