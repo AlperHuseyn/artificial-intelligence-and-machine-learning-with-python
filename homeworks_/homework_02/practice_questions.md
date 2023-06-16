@@ -74,7 +74,7 @@ So while reading the dataset using the read_csv function, use the argument `deli
 if they contain more than two categories.
 
 - There are some missing data in the columns in the form of `"unknown"`. If the missing data in the columns is more than 25%, express it
-as a different category in the form of `"unknown"`. If the missing data in categorical columns is less than 25%, fill it using the "mode"
+as a different category in the form of `"Unknown"`. If the missing data in categorical columns is less than 25%, fill it using the "mode"
 technique.
 
 - Remove the categorical columns from the DataFrame object and add the numerically transformed columns to the object.
