@@ -1,3 +1,9 @@
+"""
+This script preprocesses the Titanic dataset by dropping irrelevant columns, handling missing data, 
+and encoding categorical variables. The resulting processed dataset is saved to a new CSV file in 
+the current working directory.
+"""
+
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 import os
