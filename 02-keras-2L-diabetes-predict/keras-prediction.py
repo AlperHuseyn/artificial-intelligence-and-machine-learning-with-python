@@ -1,3 +1,17 @@
+"""
+This code builds a neural network model to predict diabetes based on input features. 
+While this code provides a general idea of how to build a neural network model using Keras, 
+it may not necessarily be the best solution for predicting diabetes with high accuracy.
+
+It is important to note that building an accurate predictive model requires careful consideration 
+of various factors such as data quality, preprocessing, feature selection, hyperparameter tuning, 
+and model evaluation. Therefore, before applying this code to real-world applications, further 
+modifications and optimizations may be necessary to improve its performance.
+
+Overall, this code serves as a starting point for understanding the basic structure of a neural 
+network model and provides a foundation for further exploration and experimentation in machine learning.
+"""
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import Sequential
@@ -46,3 +60,17 @@ score = model.evaluate(predictor, predictor_outputs, verbose=0)
 
 # Print the accuracy of the model on the test dataset
 print('Test accuracy:', score[1])
+
+# Load the array to be predicted
+diabetes_data_to_predict = pd.read_csv('predicted.csv').to_numpy()
+
+# Predict if person has diabetes
+predictions = model.predict(diabetes_data_to_predict)
+
+# Print predictions
+for prediction in predictions:
+    if prediction > 0.5:
+        print('Person have got diabetes...')
+    else:
+        print('Person is healthy...')
+        
