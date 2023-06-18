@@ -69,8 +69,6 @@ predictions = model.predict(diabetes_data_to_predict)
 
 # Print predictions
 for prediction in predictions:
-    if prediction > 0.5:
-        print('Person have got diabetes...')
-    else:
-        print('Person is healthy...')
+    print('Person have got diabetes...' if prediction > 0.5 else 'Person is healthy...')
+
         
