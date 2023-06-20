@@ -1,6 +1,6 @@
 ## Heart Failure Clinical Records Dataset Analysis and Prediction
 
-We will analyze the "heart_failure_clinical_records_dataset.csv" dataset that was created to predict whether a person will die from heart problems based on various biomedical measurements. You can download this dataset from [Kaggle](https://www.kaggle.com/andrewmvd/heart-failure-clinical-data).
+We will analyze the `"heart_failure_clinical_records_dataset.csv"` dataset that was created to predict whether a person will die from heart problems based on various biomedical measurements. You can download this dataset from [Kaggle](https://www.kaggle.com/andrewmvd/heart-failure-clinical-data).
 
 Since there are significant scale differences between columns in the dataset, feature scaling should be applied for better performance. However, we will not apply it in this case.
 
