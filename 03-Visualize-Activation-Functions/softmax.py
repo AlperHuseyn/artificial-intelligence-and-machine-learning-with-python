@@ -1,3 +1,14 @@
+"""
+This example shows how to use the softmax function to convert an array of
+raw scores into probabilities. We have an array `scores` of length 10, which
+contains the scores produced by a machine learning model for each digit (0-9)
+based on input image. The `softmax` function is used to convert these scores
+into probabilities by applying the softmax function element-wise to each score.
+The resulting array of probabilities `probs` has the same length as `scores`
+and represents the corresponding probability distribution over all possible outputs.
+"""
+
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -9,27 +20,8 @@ def softmax(x):
     e_x = np.exp(x - np.max(x))
     return e_x / e_x.sum(axis=0)
 
-# Generate 100 points between -5 and 5 along the x-axis
-x = np.linspace(-10, 10, 100)
+# Example usage:
+scores = np.array([9.2, 3.5, -0.1, 5.6, 7.8, 2.1, -1.5, 0.2, 4.9, 6.3])
+probs = softmax(scores)
 
-# Calculate corresponding y values using softmax function
-y = softmax(x)
-
-# Create plot with custom styling
-fig, ax = plt.subplots(figsize=(8,6))
-ax.plot(x, y, linewidth=2, color='blue')
-
-# Set plot title and axis labels
-ax.set_title('Softmax Activation Function', fontsize=18)
-ax.set_xlabel('X', fontsize=14)
-ax.set_ylabel('Y', fontsize=14)
-
-# Customize tick labels and grid lines
-ax.tick_params(axis='both', which='major', labelsize=12)
-ax.grid(alpha=0.3)
-
-# Save the plot as a JPEG file
-plt.savefig('softmax.jpg', dpi=300, bbox_inches='tight')
-
-# Show plot
-plt.show()
+print(probs)
