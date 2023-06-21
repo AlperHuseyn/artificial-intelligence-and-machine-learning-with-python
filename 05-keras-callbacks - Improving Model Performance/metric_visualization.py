@@ -70,6 +70,21 @@ def plot_epoch_loss_graph(hist, title='Epoch-Loss Graph'):
     
     # Show plot
     plt.show()
+    
+def plot_epoch_accuracy_graph(hist, title='Epoch-Accuracy Graph'):
+    x = hist.epoch
+    y = hist.history['binary_accuracy']
+    z = hist.history['val_binary_accuracy']
+    
+    # Create plot with custom styling
+    plt.plot(x, y, linewidth=2, color='blue')
+    plt.plot(x, z, linewidth=2, color='orange')
+    
+    # Save the plot as a JPEG file
+    plt.savefig(f'{title}.jpg', dpi=300, bbox_inches='tight')
+    
+    # Show plot
+    plt.show()
 
 def main():
     """
@@ -95,6 +110,8 @@ def main():
     hist = train_and_evaluate_model(regressor, regressor_outputs, predictor, predictor_outputs)
     
     plot_epoch_loss_graph(hist)
+    
+    plot_epoch_accuracy_graph(hist)
     
 if __name__ == '__main__':
     main()
