@@ -1,3 +1,11 @@
+"""
+This script is for practicing purposes and is not intended to be used for high-performance predictions. The script defines a 2-layer Sequential neural network model to 
+predict the risk of heart failure based on given input features. The model is trained and evaluated using heart failure data obtained from a CSV file, which is split 
+into training and test sets. The model's accuracy is tested for different epoch values (1, 50, 100, 150, 200), and the predicted heart failure risk is written to text files.
+Please note that this model is not intended to provide medical advice, and any decisions related to medical conditions should be discussed with a qualified healthcare 
+professional.
+"""
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import Sequential
