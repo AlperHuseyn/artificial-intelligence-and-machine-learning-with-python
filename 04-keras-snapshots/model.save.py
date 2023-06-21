@@ -31,7 +31,7 @@ model.add(Dense(32, activation='relu', input_dim=regressor.shape[1], name='hidde
 model.add(Dense(16, activation='relu', name='hidden-2'))
 model.add(Dense(1, activation='sigmoid', name='output'))
 
-# Compile the model with binary cross-entropy loss function, adam optimizer, and binary_accuracy metrics
+# Compile the model with binary cross-entropy loss function, rmsprop optimizer, and binary_accuracy metrics
 model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['binary_accuracy'])
 
 # Train the model on the training dataset

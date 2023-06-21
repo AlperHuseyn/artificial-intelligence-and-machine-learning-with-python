@@ -10,4 +10,4 @@ We will train the model with any optimizer algorithm, selecting appropriate loss
 
 Next, we will repeat the training with epoch values of 1, 50, 100, 150, and 200. Finally, we will test the final models with the test dataset.
 
-To demonstrate the predictive power of our model, we will make predictions by taking some data from the test dataset and changing some column values.
+To demonstrate the predictive power of our model, we will make predictions by using `predicted.csv` file in the folder.
