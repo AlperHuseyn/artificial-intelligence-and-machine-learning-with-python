@@ -51,6 +51,9 @@ def train_and_evaluate_model(regressor, regressor_outputs, predictor, predictor_
     model = create_2L_model(input_dim=regressor.shape[1], name='heart-Failure-Predictor')
     # Train the model on the training dataset
     # Use 10% of the training data as validation data to monitor the model's performance during training
+    # Log the training history to a CSV file for later analysis
+    # The 'hist' object contains training history, 
+    # which is used to plot an epoch-loss graph to determine the optimal number of epochs and avoid overfitting.
     hist = model.fit(regressor, regressor_outputs, epochs=epochs, validation_split=.1, callbacks=[CSVLogger('heart-failure.csv')])
     # Evaluate the model on the test dataset
     model.evaluate(predictor, predictor_outputs, verbose=0)
