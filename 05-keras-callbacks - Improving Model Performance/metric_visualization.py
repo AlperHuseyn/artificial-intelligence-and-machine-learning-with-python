@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense
 import matplotlib.pyplot as plt
+from tensorflow.keras.callbacks import CSVLogger
 
 
 def create_2L_model(input_dim, name=None):
@@ -50,7 +51,7 @@ def train_and_evaluate_model(regressor, regressor_outputs, predictor, predictor_
     model = create_2L_model(input_dim=regressor.shape[1], name='heart-Failure-Predictor')
     # Train the model on the training dataset
     # Use 10% of the training data as validation data to monitor the model's performance during training
-    hist = model.fit(regressor, regressor_outputs, epochs=epochs, validation_split=.1)
+    hist = model.fit(regressor, regressor_outputs, epochs=epochs, validation_split=.1, callbacks=[CSVLogger('heart-failure.csv')])
     # Evaluate the model on the test dataset
     model.evaluate(predictor, predictor_outputs, verbose=0)
         
