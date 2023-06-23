@@ -123,9 +123,10 @@ def main():
     
     standard_scaler = StandardScaler()
     standard_scaler.fit(regressor)
-    feature_scaled = standard_scaler.transform(regressor)
+    feature_scaled_training_data = standard_scaler.transform(regressor)
+    feature_scaled_test_data = standard_scaler.transform(predictor)
     
-    hist = train_and_evaluate_model(feature_scaled, regressor_outputs, predictor, predictor_outputs)
+    hist = train_and_evaluate_model(feature_scaled_training_data, regressor_outputs, feature_scaled_test_data, predictor_outputs)
     
     plot_epoch_loss_graph(hist)
     
