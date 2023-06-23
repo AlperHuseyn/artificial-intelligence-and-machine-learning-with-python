@@ -30,31 +30,31 @@ def create_2L_model(input_dim, name=None):
     
     return model
 
-def train_and_evaluate_model(regressor, regressor_outputs, predictor, predictor_outputs, epochs=100):
+def train_and_evaluate_model(X_train, y_train, X_test, y_test, epochs=100):
     """
     Train and evaluate the heart failure prediction model.
 
     Args:
-        regressor (pandas.DataFrame): Input features for training.
-        regressor_outputs (pandas.Series): Output values for training.
-        predictor (pandas.DataFrame): Input features for prediction.
-        predictor_outputs (pandas.Series): Output values for prediction.
+        X_train (pandas.DataFrame): Input features for training.
+        y_train (pandas.Series): Output values for training.
+        X_test (pandas.DataFrame): Input features for prediction.
+        y_test (pandas.Series): Output values for prediction.
         epochs (int): Number of training epochs.
         
 
     Returns:
         float: Accuracy of the model on the test dataset.
-        numpy.ndarray: Predicted heart failure risk for the predictor dataset.
+        numpy.ndarray: Predicted heart failure risk for the X_test dataset.
     """
     # Create model using create_2L_model func.
-    model = create_2L_model(input_dim=regressor.shape[1], name='heart-Failure-Predictor')
+    model = create_2L_model(input_dim=X_train.shape[1], name='heart-Failure-X_test')
     # Train the model on the training dataset
     # Use 10% of the training data as validation data to monitor the model's performance during training
     # Log the training history to a CSV file (heart-failure.csv) for later analysis
     # The 'hist' object contains training history, which is used to plot an epoch-loss graph to determine the optimal number of epochs and avoid overfitting.
-    hist = model.fit(regressor, regressor_outputs, epochs=epochs, validation_split=.1, callbacks=[CSVLogger('heart-failure.csv')])
+    hist = model.fit(X_train, y_train, epochs=epochs, validation_split=.1, callbacks=[CSVLogger('heart-failure.csv')])
     # Evaluate the model on the test dataset
-    model.evaluate(predictor, predictor_outputs, verbose=0)
+    model.evaluate(X_test, y_test, verbose=0)
         
     return hist
 
@@ -113,19 +113,20 @@ def main():
     # Split the dataset into training and test sets using train_test_split function
     training_data, test_set = train_test_split(heart_failure_data, test_size=1-DIVIDE_RATIO)
     
-    # Separate the input features (regressor) and output values (regressor_outputs) of the training dataset
-    regressor = training_data.iloc[:, :-1]
-    regressor_outputs = training_data.iloc[:, -1]
+    # Separate the input features (X_train) and output values (y_train) of the training dataset
+    X_train = training_data.iloc[:, :-1]
+    y_train = training_data.iloc[:, -1]
     
-    # Separate the input features (predictor) and output values (predictor_outputs) of the training dataset
-    predictor = test_set.iloc[:, :-1]
-    predictor_outputs = test_set.iloc[:, -1]
+    # Separate the input features (X_test) and output values (y_test) of the training dataset
+    X_test = test_set.iloc[:, :-1]
+    y_test = test_set.iloc[:, -1]
     
-    hist = train_and_evaluate_model(regressor, regressor_outputs, predictor, predictor_outputs)
+    hist = train_and_evaluate_model(X_train, y_train, X_test, y_test)
     
     plot_epoch_loss_graph(hist)
     
     plot_epoch_accuracy_graph(hist)
+    
     
 if __name__ == '__main__':
     main()

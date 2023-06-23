@@ -16,8 +16,8 @@ training_size = int(np.round(len(diabetes_data) * DIVIDE_RATIO))
 training_dataset = diabetes_data[:training_size, :]  # training section of the dataset
 test_set = diabetes_data[training_size:, :]  # test section of the dataset
 
-regressor = training_dataset[:, :-1]
-regressor_outputs = training_dataset[:, -1]
+X_train = training_dataset[:, :-1]
+y_train = training_dataset[:, -1]
 
-predictor = test_set[:, :-1]
-predictor_outputs = test_set[:, -1] 
+X_test = test_set[:, :-1]
+y_test = test_set[:, -1] 
