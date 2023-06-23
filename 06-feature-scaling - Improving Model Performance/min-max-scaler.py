@@ -3,7 +3,7 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 
 
 def create_2L_model(input_dim, name=None):
@@ -123,25 +123,28 @@ def main():
     X_test = test_set.iloc[:, :-1]
     y_test = test_set.iloc[:, -1]
     
-    standard_scaler = StandardScaler()
-    standard_scaler.fit(X_train)
-    feature_scaled_training_data = standard_scaler.transform(X_train)
-    feature_scaled_test_data = standard_scaler.transform(X_test)
+    # Perform feature scaling on the input features using MinMaxScaler
+    scaler = MinMaxScaler()
+    feature_scaled_training_data = scaler.fit_transform(X_train)
+    feature_scaled_test_data = scaler.transform(X_test)
     
-    # Load the array to be predicted
+    # Load the array to be predicted and perform feature scaling on it
     heart_failure_data_to_predict = pd.read_csv('predicted.csv').to_numpy()
-    feature_scaled_to_predict = standard_scaler.transform(heart_failure_data_to_predict)
+    feature_scaled_to_predict = scaler.transform(heart_failure_data_to_predict)
     
+    # Train and evaluate the machine learning model using the scaled training and test data
     hist, accuracy, predictions = train_and_evaluate_model(feature_scaled_training_data, y_train, feature_scaled_test_data, y_test, feature_scaled_to_predict)
     
-    plot_epoch_loss_graph(hist)
+    # Plot the loss and accuracy for each epoch during training
+    plot_epoch_loss_graph(hist, title='Epoch-Loss Graph_')    
+    plot_epoch_accuracy_graph(hist, title='Epoch-Accuracy Graph_')
     
-    plot_epoch_accuracy_graph(hist)
-    
+    # Print the test accuracy of the trained model
     print('################################')
     print(f'Test accuracy: {accuracy}')
     print('################################')
     
+    # Print the predicted risk of heart failure for each individual in the array
     for prediction in predictions:
         print('*heart failure risk is high...' if prediction > .5 else 'Person has a low risk of heart failure...')
     
