@@ -39,7 +39,6 @@ def train_and_evaluate_model(regressor, regressor_outputs, predictor, predictor_
         regressor_outputs (pandas.Series): Output values for training.
         predictor (pandas.DataFrame): Input features for prediction.
         predictor_outputs (pandas.Series): Output values for prediction.
-        to_predict (numpy.ndarray): Input features for which predictions are to be made.
         epochs (int): Number of training epochs.
         
 
