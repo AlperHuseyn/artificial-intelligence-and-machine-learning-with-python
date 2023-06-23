@@ -4,6 +4,7 @@ from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
+import pickle
 
 
 def create_2L_model(input_dim, name=None):
@@ -30,7 +31,7 @@ def create_2L_model(input_dim, name=None):
     
     return model
 
-def train_and_evaluate_model(X_train, y_train, X_test, y_test, to_predict, epochs=100):
+def train_and_evaluate_model(X_train, y_train, X_test, y_test, to_predict, epochs=100, name='model.h5'):
     """
     Train and evaluate the heart failure prediction model.
 
@@ -57,6 +58,8 @@ def train_and_evaluate_model(X_train, y_train, X_test, y_test, to_predict, epoch
     _, accuracy = model.evaluate(X_test, y_test, verbose=0)
     # Predict DEATH_EVENT due to heart failure
     predictions = model.predict(to_predict)
+    
+    model.save(f'{name}.h5')
         
     return hist, accuracy, predictions
 
@@ -148,6 +151,9 @@ def main():
     for prediction in predictions:
         print('*heart failure risk is high...' if prediction > .5 else 'Person has a low risk of heart failure...')
     
+    with open('heart-failure.pickle', 'wb') as f:
+        pickle.dump(scaler, f)
+
 
 if __name__ == '__main__':
     main()
