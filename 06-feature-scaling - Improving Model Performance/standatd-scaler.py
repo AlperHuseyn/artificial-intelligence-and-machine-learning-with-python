@@ -30,7 +30,7 @@ def create_2L_model(input_dim, name=None):
     
     return model
 
-def train_and_evaluate_model(regressor, regressor_outputs, predictor, predictor_outputs, epochs=100):
+def train_and_evaluate_model(regressor, regressor_outputs, predictor, predictor_outputs, to_predict, epochs=100):
     """
     Train and evaluate the heart failure prediction model.
 
@@ -54,9 +54,11 @@ def train_and_evaluate_model(regressor, regressor_outputs, predictor, predictor_
     # The 'hist' object contains training history, which is used to plot an epoch-loss graph to determine the optimal number of epochs and avoid overfitting.
     hist = model.fit(regressor, regressor_outputs, epochs=epochs, validation_split=.1)
     # Evaluate the model on the test dataset
-    model.evaluate(predictor, predictor_outputs, verbose=0)
+    _, accuracy = model.evaluate(predictor, predictor_outputs, verbose=0)
+    # Predict DEATH_EVENT due to heart failure
+    predictions = model.predict(to_predict)
         
-    return hist
+    return hist, accuracy, predictions
 
 def plot_epoch_loss_graph(hist, title='Epoch-Loss Graph'):
     x = hist.epoch
@@ -126,11 +128,23 @@ def main():
     feature_scaled_training_data = standard_scaler.transform(regressor)
     feature_scaled_test_data = standard_scaler.transform(predictor)
     
-    hist = train_and_evaluate_model(feature_scaled_training_data, regressor_outputs, feature_scaled_test_data, predictor_outputs)
+    # Load the array to be predicted
+    heart_failure_data_to_predict = pd.read_csv('predicted.csv').to_numpy()
+    feature_scaled_to_predict = standard_scaler.transform(heart_failure_data_to_predict)
+    
+    hist, accuracy, predictions = train_and_evaluate_model(feature_scaled_training_data, regressor_outputs, feature_scaled_test_data, predictor_outputs, feature_scaled_to_predict)
     
     plot_epoch_loss_graph(hist)
     
     plot_epoch_accuracy_graph(hist)
     
+    print('################################')
+    print(f'Test accuracy: {accuracy}')
+    print('################################')
+    
+    for prediction in predictions:
+        print('*heart failure risk is high...' if prediction > .5 else 'Person has a low risk of heart failure...')
+    
+
 if __name__ == '__main__':
     main()
