@@ -31,7 +31,7 @@ def create_2L_model(input_dim, name=None):
     
     return model
 
-def train_and_evaluate_model(X_train, y_train, X_test, y_test, to_predict, epochs=100, name='model.h5'):
+def train_and_evaluate_model(X_train, y_train, X_test, y_test, to_predict, epochs=100, name='model'):
     """
     Train and evaluate the heart failure prediction model.
 
@@ -136,7 +136,7 @@ def main():
     feature_scaled_to_predict = scaler.transform(heart_failure_data_to_predict)
     
     # Train and evaluate the machine learning model using the scaled training and test data
-    hist, accuracy, predictions = train_and_evaluate_model(feature_scaled_training_data, y_train, feature_scaled_test_data, y_test, feature_scaled_to_predict)
+    hist, accuracy, predictions = train_and_evaluate_model(feature_scaled_training_data, y_train, feature_scaled_test_data, y_test, feature_scaled_to_predict, name='heart-failure')
     
     # Plot the loss and accuracy for each epoch during training
     plot_epoch_loss_graph(hist, title='Epoch-Loss Graph_')    
