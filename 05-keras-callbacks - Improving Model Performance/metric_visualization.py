@@ -19,7 +19,7 @@ def create_2L_model(input_dim, name=None):
     model = Sequential()
 
     # Define the architecture of the neural network by adding layers to the model
-    # The first two layers have 32 neurons each with a ReLU activation function
+    # The first two layers have 16 neurons each with a ReLU activation function
     # The final layer has a single neuron with a sigmoid activation function
     model.add(Dense(16, activation='relu', input_dim=input_dim, name='Hidden1'))
     model.add(Dense(16, activation='relu', name='Hidden2'))
@@ -51,9 +51,8 @@ def train_and_evaluate_model(regressor, regressor_outputs, predictor, predictor_
     model = create_2L_model(input_dim=regressor.shape[1], name='heart-Failure-Predictor')
     # Train the model on the training dataset
     # Use 10% of the training data as validation data to monitor the model's performance during training
-    # Log the training history to a CSV file for later analysis
-    # The 'hist' object contains training history, 
-    # which is used to plot an epoch-loss graph to determine the optimal number of epochs and avoid overfitting.
+    # Log the training history to a CSV file (heart-failure.csv) for later analysis
+    # The 'hist' object contains training history, which is used to plot an epoch-loss graph to determine the optimal number of epochs and avoid overfitting.
     hist = model.fit(regressor, regressor_outputs, epochs=epochs, validation_split=.1, callbacks=[CSVLogger('heart-failure.csv')])
     # Evaluate the model on the test dataset
     model.evaluate(predictor, predictor_outputs, verbose=0)
@@ -66,8 +65,14 @@ def plot_epoch_loss_graph(hist, title='Epoch-Loss Graph'):
     z = hist.history['val_loss']
     
     # Create plot with custom styling
-    plt.plot(x, y, linewidth=2, color='blue')
-    plt.plot(x, z, linewidth=2, color='orange')
+    fig, ax = plt.subplots(figsize=(15, 5))
+    ax.plot(x, y, linewidth=2, color='blue', label='tarining loss')
+    ax.plot(x, z, linewidth=2, color='orange', label='validation loss')
+    ax.set_title('Epochs vs Loss')
+    ax.set_xlabel('Epochs')
+    ax.set_ylabel('Loss')
+    ax.grid(alpha=.5)
+    ax.legend()
     
     # Save the plot as a JPEG file
     plt.savefig(f'{title}.jpg', dpi=300, bbox_inches='tight')
@@ -81,8 +86,14 @@ def plot_epoch_accuracy_graph(hist, title='Epoch-Accuracy Graph'):
     z = hist.history['val_binary_accuracy']
     
     # Create plot with custom styling
-    plt.plot(x, y, linewidth=2, color='blue')
-    plt.plot(x, z, linewidth=2, color='orange')
+    fig, ax = plt.subplots(figsize=(15, 5))
+    ax.plot(x, y, linewidth=2, color='blue', label='tarining accuracy')
+    ax.plot(x, z, linewidth=2, color='orange', label='validation accuracy')
+    ax.set_title('Epochs vs Accuracy')
+    ax.set_xlabel('Epochs')
+    ax.set_ylabel('Accuracy')
+    ax.grid(alpha=.5)
+    plt.legend()
     
     # Save the plot as a JPEG file
     plt.savefig(f'{title}.jpg', dpi=300, bbox_inches='tight')
