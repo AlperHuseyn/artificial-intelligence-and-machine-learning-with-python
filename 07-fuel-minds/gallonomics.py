@@ -1,12 +1,12 @@
+import matplotlib.pyplot as plt
 import pandas as pd
+import pickle
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense
-from sklearn.preprocessing import MinMaxScaler
-import matplotlib.pyplot as plt
-import pickle
 
-def create_2L_model(input_dim, name=None):
+def create_auto_mpg_model(input_dim, name=None):
     """
     Create a 2-layer Sequential model for auto-mpg prediction.
 
@@ -33,25 +33,25 @@ def create_2L_model(input_dim, name=None):
     
     return model
 
-def train_and_evaluate_model(X_train, y_train, X_test, y_test, to_predict, name='model', epochs=100):
+def train_evaluate_save_model(X_train, y_train, X_test, y_test, X_to_predict, name='model', epochs=100):
     """
-    Train and evaluate the auto-mpg prediction model.
+Train, evaluate, and save the auto-mpg prediction model.
 
-    Args:
-        X_train (pandas.DataFrame): Input features for training.
-        y_train (pandas.Series): Output values for training.
-        X_test (pandas.DataFrame): Input features for prediction.
-        y_test (pandas.Series): Output values for prediction.
-        to_predict (numpy.ndarray): Input features for which predictions are to be made.
-        epochs (int): Number of training epochs.
-        
+Args:
+    X_train (pandas.DataFrame): Input features for training.
+    y_train (pandas.Series): Output values for training.
+    X_test (pandas.DataFrame): Input features for testing.
+    y_test (pandas.Series): Output values for testing.
+    X_to_predict (numpy.ndarray): Input features for predictions.
+    name (str): Name for saving the model.
+    epochs (int): Number of training epochs.
 
-    Returns:
-        float: mae of the model on the test dataset.
-        numpy.ndarray: Predicted auto-mpg.
-    """
-    # Create model using create_2L_model func.
-    model = create_2L_model(input_dim=X_train.shape[1], name='auto-mpg')
+Returns:
+    float: Mean Absolute Error (MAE) of the model on the test dataset.
+    numpy.ndarray: Predicted auto-mpg.
+"""
+    # Create model using create_auto_mpg_model func.
+    model = create_auto_mpg_model(input_dim=X_train.shape[1], name='auto-mpg')
     # Train the model on the training dataset
     # Use 10% of the training data as validation data to monitor the model's performance during training
     # The 'hist' object contains training history, which is used to plot an epoch-loss graph to determine the optimal number of epochs and avoid overfitting.
@@ -59,13 +59,20 @@ def train_and_evaluate_model(X_train, y_train, X_test, y_test, to_predict, name=
     # Evaluate the model on the test dataset
     loss, mae = model.evaluate(X_test, y_test, verbose=0)
     # Predict DEATH_EVENT due to heart failure
-    predictions = model.predict(to_predict)
+    predictions = model.predict(X_to_predict)
     
     model.save(f'{name}.h5')
         
     return hist, loss, mae, predictions
 
 def plot_epoch_loss_graph(hist, title='Epoch-Loss Graph'):
+    """
+    Plot the training and validation loss as a function of epochs.
+
+    Args:
+        hist (keras.callbacks.History): Training history object.
+        title (str): Title for the plot.
+    """
     x = hist.epoch
     y = hist.history['loss']
     z = hist.history['val_loss']
@@ -87,6 +94,13 @@ def plot_epoch_loss_graph(hist, title='Epoch-Loss Graph'):
     plt.show()
     
 def plot_epoch_mae_graph(hist, title='Epoch-MAE Graph'):
+    """
+   Plot the training and validation Mean Absolute Error (MAE) as a function of epochs.
+
+   Args:
+       hist (keras.callbacks.History): Training history object.
+       title (str): Title for the plot.
+   """
     x = hist.epoch
     y = hist.history['mae']
     z = hist.history['val_mae']
@@ -124,8 +138,7 @@ def main():
     # Apply ohe to 7th column (categorical)
     auto_mpg_data = pd.get_dummies(auto_mpg_data, columns=[7]).to_numpy(dtype='float32') 
     
-    training_set = auto_mpg_data[:, 1:]
-    test_set = auto_mpg_data[:, 0]
+    training_set, test_set = auto_mpg_data[:, 1:], auto_mpg_data[:, 0]
     
     X_train, X_test, y_train, y_test = train_test_split(training_set, test_set, test_size=1-DIVIDE_RATIO)
     
@@ -138,7 +151,7 @@ def main():
     scaled_to_predict = scaler.transform(auto_mpg_data_to_predict)
 
     # Train and evaluate the machine learning model using the scaled training and test data
-    hist, loss, mae, predictions = train_and_evaluate_model(scaled_X_train, y_train, scaled_X_test, y_test, scaled_to_predict, name='auto-mpg')
+    hist, loss, mae, predictions = train_evaluate_save_model(scaled_X_train, y_train, scaled_X_test, y_test, scaled_to_predict, name='auto-mpg')
     
     # Plot the loss and mae for each epoch during training
     plot_epoch_loss_graph(hist, title='Epoch-Loss Graph')    
@@ -146,6 +159,7 @@ def main():
     
     # Print the test loss and mae of the trained model
     print('################################')
+    print("Model Evaluation Metrics:")
     print(f'loss: {loss}\nMAE: {mae}')
     print('################################')
     
