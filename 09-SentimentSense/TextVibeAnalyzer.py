@@ -30,14 +30,14 @@ def create_IMDB_model(input_dim, name=None):
     # Print model info on console
     model.summary()
 
-    # Compile the model with mse loss function, adam optimizer, and binary_accuracy metrics
+    # Compile the model with binary_crossentropy loss function, adam optimizer, and binary_accuracy metrics
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['binary_accuracy'])
     
     return model
 
 def train_evaluate_save_model(X_train, y_train, X_test, y_test, X_to_predict, name='model', epochs=10):
     """
-Train, evaluate, and save the IMDB-sentiment prediction model.
+Train, evaluate, and save the IMDB review-sentiment prediction model.
 
 Args:
     X_train (pandas.DataFrame): Input features for training.
@@ -52,7 +52,7 @@ Returns:
     float: binary accuracy of the model on the test dataset.
     numpy.ndarray: Predicted auto-mpg.
 """
-    # Create model using create_auto_mpg_model func.
+    # Create model using create_IMDB_model func.
     model = create_IMDB_model(input_dim=X_train.shape[1], name='IMDB-sentiment')
     # Train the model on the training dataset
     # Use 10% of the training data as validation data to monitor the model's performance during training
@@ -60,7 +60,7 @@ Returns:
     hist = model.fit(X_train, y_train, epochs=epochs, validation_split=.1)
     # Evaluate the model on the test dataset
     loss, binary_accuracy = model.evaluate(X_test, y_test, verbose=0)
-    # Predict DEATH_EVENT due to heart failure
+    # Predict review-sentiment from comments
     predictions = model.predict(X_to_predict)
     
     model.save(f'{name}.h5')
@@ -111,7 +111,7 @@ def plot_epoch_binary_accuracy_graph(hist, title='Epoch-Binary Accuracy Graph'):
     fig, ax = plt.subplots(figsize=(15, 5))
     ax.plot(x, y, linewidth=2, color='blue', label='tarining binary accuracy')
     ax.plot(x, z, linewidth=2, color='orange', label='validation binary accuracy')
-    ax.set_title('Epochs vs mae')
+    ax.set_title('Epochs vs binary_accuracy')
     ax.set_xlabel('Epochs')
     ax.set_ylabel('binary_accuracy')
     ax.grid(alpha=.5)
@@ -135,19 +135,25 @@ def main():
     encoder = LabelEncoder()
     y_dataset = encoder.fit_transform(IMDB_data['sentiment']).astype(np.int8)
     
-    # Apple vectorization by not using external module 
+    # Apply vectorization to convert text into a numerical representation
     unique_words = set()
     for i in range(len(IMDB_data)):
+        # Tokenize the text by extracting individual words
         words = regex.findall(r'\b[\w\'-]+\b', IMDB_data.iloc[i, 0].lower())
         unique_words.update(words)
     
+    # Create a dictionary to map each unique word to an index
     word_dictionary = {word: index for index, word in enumerate(unique_words)}
     
+    # Create a matrix to represent the occurrence of words in each review
     X_dataset = np.zeros((IMDB_data.shape[0], len(word_dictionary)), dtype='int8')
     
     for row, text in enumerate(IMDB_data['review']):
+        # Tokenize the text by extracting individual words
         words = regex.findall(r'\b[\w\'-]+\b', text.lower())
+        # Map each word to its corresponding index in the word dictionary
         word_indices = [word_dictionary[word] for word in words]
+        # Set the corresponding indices in the matrix to 1 to indicate word occurrence
         X_dataset[row, word_indices] = 1
         
     # Split the dataset into training and test sets using train_test_split function
@@ -156,22 +162,32 @@ def main():
     # Load the array to be predicted and perform feature scaling on it
     IMDB_data_to_predict = pd.read_csv('predicted.csv').to_numpy()
     
-    # Train and evaluate the machine learning model using the training and test data
-    hist, loss, binary_accuracy, predictions = train_evaluate_save_model(X_train, y_train, X_test, y_test, IMDB_data_to_predict, name='IMDB-sentiment')
+    # Apply vectorization to the data array for prediction
+    IMDB_data_to_predict_vector = np.zeros((len(IMDB_data_to_predict), len(word_dictionary)), dtype='int8')
     
-    # Plot the loss and mae for each epoch during training
+    for i in range(len(IMDB_data_to_predict)):
+        # Convert the review text to a string to ensure consistency
+        text = str(IMDB_data_to_predict)  
+        words = regex.findall(r'\b[\w\'-]+\b', text[i].lower())
+        word_indices = [word_dictionary[word] for word in words]
+        IMDB_data_to_predict_vector[i, word_indices] = 1
+    
+    # Train and evaluate the machine learning model using the training and test data
+    hist, loss, binary_accuracy, predictions = train_evaluate_save_model(X_train, y_train, X_test, y_test, IMDB_data_to_predict_vector, name='IMDB-sentiment')
+    
+    # Plot the loss and binary_accuracy for each epoch during training
     plot_epoch_loss_graph(hist, title='Epoch-Loss Graph')    
     plot_epoch_binary_accuracy_graph(hist, title='Epoch-Binary Accuracy Graph')
     
-    # Print the test loss and mae of the trained model
+    # Print the test loss and binary_accuracy of the trained model
     print('################################')
     print("Model Evaluation Metrics:")
     print(f'loss: {loss}\nbinary_accuracy: {binary_accuracy}')
     print('################################')
     
-    # Print the predicted mpg for each individual in the array
-    for prediction in predictions[:, 0]:
-        print(prediction)
+    # Print the predicted sentiment for each individual in the array
+    for prediction in predictions:
+        print('Positive...' if prediction > .5 else '*Negative...')
     
     
 if __name__ == '__main__':
