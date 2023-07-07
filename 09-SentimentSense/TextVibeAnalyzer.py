@@ -133,7 +133,7 @@ def main():
     
     # Encode sentiment column (0 - negative, 1 - positive)
     encoder = LabelEncoder()
-    y_dataset = encoder.fit_transform(IMDB_data['sentiment'])
+    y_dataset = encoder.fit_transform(IMDB_data['sentiment']).astype(np.int8)
     
     # Apple vectorization by not using external module 
     unique_words = set()
