@@ -1,3 +1,7 @@
+"""
+This script trains and evaluates a machine learning model for sentiment prediction using the IMDB dataset. The main focus of this script is to demonstrate the process of vectorizing text data and building a basic neural network model. It does not aim to achieve high performance or accuracy. However, by improving the vectorization techniques, such as using more advanced text preprocessing methods or employing pre-trained word embeddings, and optimizing the model architecture and hyperparameters, you can aim for better performance and accuracy in sentiment prediction tasks.
+"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -21,21 +25,21 @@ def create_IMDB_model(input_dim, name=None):
     model = Sequential()
 
     # Define the architecture of the neural network by adding layers to the model
-    # The first two layers have 128 neurons each with a ReLU activation function
+    # The first two layers have 64 neurons each with a ReLU activation function
     # The final layer has a three neuron with a sigmoid activation function
-    model.add(Dense(128, activation='relu', input_dim=input_dim, name='Hidden1'))
-    model.add(Dense(128, activation='relu', name='Hidden2'))
+    model.add(Dense(64, activation='relu', input_dim=input_dim, name='Hidden1'))
+    model.add(Dense(64, activation='relu', name='Hidden2'))
     model.add(Dense(1, activation='sigmoid', name='output'))
     
     # Print model info on console
     model.summary()
 
-    # Compile the model with binary_crossentropy loss function, adam optimizer, and binary_accuracy metrics
-    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['binary_accuracy'])
+    # Compile the model with binary_crossentropy loss function, rmsprop optimizer, and binary_accuracy metrics
+    model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['binary_accuracy'])
     
     return model
 
-def train_evaluate_save_model(X_train, y_train, X_test, y_test, X_to_predict, name='model', epochs=10):
+def train_evaluate_save_model(X_train, y_train, X_test, y_test, X_to_predict, name='model', epochs=5):
     """
 Train, evaluate, and save the IMDB review-sentiment prediction model.
 
@@ -50,14 +54,14 @@ Args:
 
 Returns:
     float: binary accuracy of the model on the test dataset.
-    numpy.ndarray: Predicted auto-mpg.
+    numpy.ndarray: Predicted IMDB review-sentiment.
 """
     # Create model using create_IMDB_model func.
-    model = create_IMDB_model(input_dim=X_train.shape[1], name='IMDB-sentiment')
+    model = create_IMDB_model(input_dim=X_train.shape[1], name='IMDB-review-sentiment')
     # Train the model on the training dataset
     # Use 10% of the training data as validation data to monitor the model's performance during training
     # The 'hist' object contains training history, which is used to plot an epoch-loss graph to determine the optimal number of epochs and avoid overfitting.
-    hist = model.fit(X_train, y_train, epochs=epochs, validation_split=.1)
+    hist = model.fit(X_train, y_train, epochs=epochs, validation_split=.2)
     # Evaluate the model on the test dataset
     loss, binary_accuracy = model.evaluate(X_test, y_test, verbose=0)
     # Predict review-sentiment from comments
@@ -157,7 +161,7 @@ def main():
         X_dataset[row, word_indices] = 1
         
     # Split the dataset into training and test sets using train_test_split function
-    X_train, X_test, y_train, y_test = train_test_split(X_dataset, y_dataset, test_size=.2)
+    X_train, X_test, y_train, y_test = train_test_split(X_dataset, y_dataset)
     
     # Load the array to be predicted and perform feature scaling on it
     IMDB_data_to_predict = pd.read_csv('predicted.csv').to_numpy()
@@ -187,7 +191,7 @@ def main():
     
     # Print the predicted sentiment for each individual in the array
     for prediction in predictions:
-        print('Positive...' if prediction > .5 else '*Negative...')
+        print('Positive' if prediction > .5 else '**Negative')
     
     
 if __name__ == '__main__':
