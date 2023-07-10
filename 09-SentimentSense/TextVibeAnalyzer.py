@@ -1,5 +1,8 @@
 """
-This script trains and evaluates a machine learning model for sentiment prediction using the IMDB dataset. The main focus of this script is to demonstrate the process of vectorizing text data and building a basic neural network model. It does not aim to achieve high performance or accuracy. However, by improving the vectorization techniques, such as using more advanced text preprocessing methods or employing pre-trained word embeddings, and optimizing the model architecture and hyperparameters, you can aim for better performance and accuracy in sentiment prediction tasks.
+This script trains and evaluates a machine learning model for sentiment prediction using the IMDB dataset. The main focus of this script is to demonstrate the process 
+of vectorizing text data and building a basic neural network model. It does not aim to achieve high performance or accuracy. However, by improving the vectorization 
+techniques, such as using more advanced text preprocessing methods or employing pre-trained word embeddings, and optimizing the model architecture and hyperparameters, 
+you can aim for better performance and accuracy in sentiment prediction tasks.
 """
 
 import matplotlib.pyplot as plt
