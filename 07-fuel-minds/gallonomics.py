@@ -16,7 +16,7 @@ def create_auto_mpg_model(input_dim, name=None):
     Returns:
         tensorflow.keras.Sequential: Created model.
     """
-    model = Sequential()
+    model = Sequential(name=name)
 
     # Define the architecture of the neural network by adding layers to the model
     # The first two layers have 64 neurons each with a ReLU activation function
