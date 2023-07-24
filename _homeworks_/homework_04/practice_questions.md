@@ -6,12 +6,12 @@
 
 - We will only be concerned with two columns: "OriginalTweet" and "Sentiment." Make sure to read the dataset using Pandas' `read_csv` function with `encoding='latin-1'`.
 
-- The "Sentiment" column consists of categorical data with four categories:
-    - Neutral
+- The "Sentiment" column consists of categorical data with five categories:
     - Positive
-    - Extremely Negative
     - Negative
+    - Neutral
     - Extremely Positive
+    - Extremely Negative
 
 - Note that the output layer of the model should use "softmax." Also, the output data should undergo "one hot encoding" before training. You can directly perform vectorization for the text data using the `CountVectorizer` class since the text can be obtained directly.
 
