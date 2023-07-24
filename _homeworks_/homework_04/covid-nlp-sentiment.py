@@ -155,10 +155,10 @@ def main():
     X_test = vectorizer.transform(X_test).todense()
     
     # Load the array to be predicted 
-    covid_data_to_predict = pd.read_csv('predicted.csv')
+    covid_data_to_predict = pd.read_csv('predicted.csv')['OriginalTweet'].tolist()
     
     # Apply vectorization to the data array for prediction
-    covid_data_to_predict_vector = vectorizer.transform(covid_data_to_predict)
+    covid_data_to_predict_vector = vectorizer.transform(covid_data_to_predict).todense()
     
     # Train and evaluate the machine learning model using the training and test data
     hist, loss, categorical_accuracy, predictions = train_evaluate_save_model(X_train, y_train, X_test, y_test, covid_data_to_predict_vector, name='covid-sentiment')
