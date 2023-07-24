@@ -176,13 +176,13 @@ def main():
     X_test = vectorizer.transform(X_test).todense()
     
     # Load the array to be predicted and perform feature scaling on it
-    reuters_data_to_predict = pd.read_csv('reuters-predicted.csv')
+    reuters_data_to_predict = pd.read_csv('reuters-predicted.csv')['text'].tolist()
     
     # Apply vectorization to the data array for prediction
-    reuters_data_to_predict_vector = vectorizer.transform(reuters_data_to_predict)
+    reuters_data_to_predict_vector = vectorizer.transform(reuters_data_to_predict).todense()
     
     # Free up memory
-    
+    del reuters_data_to_predict, file, fname, group, idx, lab, label,  line, match, num, PATH, test_labels, training_labels 
     
     # Train and evaluate the machine learning model using the training and test data
     hist, loss, categorical_accuracy, predictions = train_evaluate_save_model(X_train, y_train, X_test, y_test, reuters_data_to_predict_vector, name='reuters-sentiment')
