@@ -29,7 +29,7 @@ def create_covid_model(input_dim, name=None):
     # Print model info on console
     model.summary()
 
-    # Compile the model with binary_crossentropy loss function, rmsprop optimizer, and binary_accuracy metrics
+    # Compile the model with categorical_crossentropy loss function, rmsprop optimizer, and categorical_accuracy metrics
     model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['categorical_accuracy'])
     
     return model
@@ -48,18 +48,18 @@ Args:
     epochs (int): Number of training epochs.
 
 Returns:
-    float: binary accuracy of the model on the test dataset.
-    numpy.ndarray: Predicted IMDB review-sentiment.
+    float: categorical accuracy of the model on the test dataset.
+    numpy.ndarray: Predicted covid-nlp-sentiment.
 """
-    # Create model using create_reuters_model func.
+    # Create model using create_covid_model func.
     model = create_covid_model(input_dim=X_train.shape[1], name='Covid-nlp')
     # Train the model on the training dataset
-    # Use 10% of the training data as validation data to monitor the model's performance during training
+    # Use 20% of the training data as validation data to monitor the model's performance during training
     # The 'hist' object contains training history, which is used to plot an epoch-loss graph to determine the optimal number of epochs and avoid overfitting.
     hist = model.fit(X_train, y_train, epochs=epochs, validation_split=.2)
     # Evaluate the model on the test dataset
     loss, category_accuracy = model.evaluate(X_test, y_test, verbose=0)
-    # Predict review-sentiment from comments
+    # Predict covid-nlp-sentiment from tweets
     predictions = model.predict(X_to_predict)
     
     model.save(f'{name}.h5')
@@ -124,7 +124,7 @@ def plot_epoch_categorical_accuracy_graph(hist, title='Epoch-Categorical Accurac
 
 def main():
     """
-    Main function to train and evaluate the iris prediction model.
+    Main function to train and evaluate the covid-nlp prediction model.
     """
     # Read tweeter training data from data file as pandas DataFrame
     tweeter_training_data = pd.read_csv('Corona_NLP_train.csv', encoding='latin-1').dropna(subset=['OriginalTweet', 'Sentiment'])
@@ -166,11 +166,11 @@ def main():
     # Free up memory
     del tweeter_test_data, tweeter_training_data, covid_data_to_predict
     
-    # Plot the loss and mae for each epoch during training
+    # Plot the loss and categoracal accuracy for each epoch during training
     plot_epoch_loss_graph(hist, title='Epoch-Loss Graph')    
     plot_epoch_categorical_accuracy_graph(hist, title='Epoch-Categorical Accuracy Graph')
     
-    # Print the test loss and mae of the trained model
+    # Print the test loss and categorical accuracy of the trained model
     print('################################')
     print("Model Evaluation Metrics:")
     print(f'loss: {loss}\ncategorical_accuracy: {categorical_accuracy}')
