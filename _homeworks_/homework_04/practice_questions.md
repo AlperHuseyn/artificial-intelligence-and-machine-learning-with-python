@@ -12,15 +12,14 @@
    - Remove rows with NaN values using the `dropna` function.
    - Choose the following columns from the DataFrame: `LB, AC, FM, UC, DL, DS, DP, ASTV, MSTV, ALTV, MLTV, Width, Min, Max, Nmax, Nzeros, Mode, Mean, Median, Variance, Tendency, NSP`
    
-   
-   
-    ```python
-    import pandas as pd
-    
-    df_sheet = pd.read_excel('ctg.xls', sheet_name='Raw Data', usecols='G:AN')
-    
-    df = df_sheet.dropna()
-    ```
+
+```python
+import pandas as pd
+
+df_sheet = pd.read_excel('ctg.xls', sheet_name='Raw Data', usecols='G:AN')
+
+df = df_sheet.dropna()
+```
 
 3. **Target Variable:**
    - The last column, NSP, represents the target categorical value to be predicted.
