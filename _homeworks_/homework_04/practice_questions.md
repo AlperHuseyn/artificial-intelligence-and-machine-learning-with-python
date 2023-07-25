@@ -12,6 +12,7 @@
    - Remove rows with NaN values using the `dropna` function.
    - Choose the following columns from the DataFrame: `LB, AC, FM, UC, DL, DS, DP, ASTV, MSTV, ALTV, MLTV, Width, Min, Max, Nmax, Nzeros, Mode, Mean, Median, Variance, Tendency, NSP`
    
+   
     ```python
     import pandas as pd
     
