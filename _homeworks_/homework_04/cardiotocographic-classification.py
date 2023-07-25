@@ -156,6 +156,9 @@ def main():
     # Print the predicted label for each individual in the array
     for prediction in np.argmax(predictions, axis=1):
         print(labels[prediction])
+        
+    with open('cardiotocographic.pickle', 'wb') as f:
+        pickle.dump(scaler, f)
     
 
 if __name__ == '__main__':
