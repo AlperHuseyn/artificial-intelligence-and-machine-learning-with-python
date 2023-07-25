@@ -22,7 +22,6 @@ Artificial intelligence and machine learning are rapidly evolving fields with im
 - Comprehensive collection of AI and ML notes and resources
 - Covers a wide range of topics, including supervised and unsupervised learning, deep learning, TensorFLow, PyTorch, Theano, and more
 - Real-world examples and case studies
-- Easy-to-understand explanations with clear diagrams and code snippets
 
 ## Installation
 
