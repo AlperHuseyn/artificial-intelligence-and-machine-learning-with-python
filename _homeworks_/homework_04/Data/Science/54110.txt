@@ -1,0 +1,16 @@
+Message-ID: <1r7h2hINN2n9@kralizec.zeta.org.au>
+References: <1qg98sINNokf@sheoak.ucnv.edu.au> <1qgk3a$2sf@agate.berkeley.edu> <1993Apr18.225707.27047@philips.oz.au>
+NNTP-Posting-Host: kralizec.zeta.org.au
+
+
+>>In article <1qg98sINNokf@sheoak.ucnv.edu.au> jeff@redgum.ucnv.edu.au (j. pethybridge) writes:
+>>>	Hello again,
+>>> I asked this a year ago, but i am still looking.
+>>> I am getting sick of having to use a HC373 
+
+If you are just getting sick of the real estate used by the HCT373, you could
+always use the approach I have seen one designer take - he stuck the chip in
+the middle of the EPROM socket, under the EPROM.  Naturally, you have to use
+an IC socket with the right dimensions, but layout is really easy.
+
+-Steven Murray

@@ -1,0 +1,8 @@
+Message-ID: <1rjkneINN6aa@dns1.NMSU.Edu>
+NNTP-Posting-Host: spock.nmsu.edu
+
+I am working on a project and am in need of information regarding the  
+currents (at the head) needed to write to a hard drive and the currents  
+produced when reading.  If anyone has information it would be much  
+appreciated.
+mcole@nmsu.edu

@@ -1,0 +1,11 @@
+Distribution: na
+Message-ID: <1rh032$kc9@access.digex.net>
+References: <1993Apr21.172614.10185@lehman.com> <1993Apr22.132638.19448@ringer.cs.utsa.edu> <1993Apr24.233742.26839@lehman.com> <1993Apr26.104320.10398@infodev.cam.ac.uk>
+NNTP-Posting-Host: access.digex.net
+
+  The "low radiation" claims one sees on monitors these days pertain to
+allegedly harmful electromagnetic emissions, which does not necessarily have
+anything to do wtih TEMPEST security.
+  (I think the alleged hazard is BS, but that's another topic.)
+
+

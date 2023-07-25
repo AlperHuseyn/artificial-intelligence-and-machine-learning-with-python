@@ -1,0 +1,7 @@
+Message-ID: <1quo16INN2ap@hp-col.col.hp.com>
+References: <1qhlo3INN32s@ua.d.umn.edu>
+NNTP-Posting-Host: hpctdkz.col.hp.com
+
+A point of interest - in "hacking" a mechanical speed/odometer, not
+all drills will work!  Just a guess, but I think you'd have to drive it 
+counter-clockwise, which would require a reversible drill.

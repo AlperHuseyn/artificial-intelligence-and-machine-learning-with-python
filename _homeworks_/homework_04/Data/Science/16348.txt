@@ -1,0 +1,14 @@
+Message-ID: <1s0gtc$evu@access.digex.net>
+References: <cliftonrC69tvt.4AL@netcom.com> <8DpBHEj024n@sktb.demon.co.uk> <erwin.736304526@trwacs>
+NNTP-Posting-Host: access.digex.net
+
+erwin@trwacs.fp.trw.com (Harry Erwin) writes:
+
+>Anyone interested in adopting British Telecom's quantum encryption scheme?
+>They've demonstrated it over a 10 km link. It automatically detects
+>wiretapping.
+
+Can you tell us more?
+
+-pooka
+

@@ -1,0 +1,15 @@
+Distribution: inet
+Message-ID: <1rgt69$ql2@agate.berkeley.edu>
+References: <1993Apr20.005616.1@cc.curtin.edu.au> <1993Apr25.143018.5048@nic.csu.net>
+NNTP-Posting-Host: zion.berkeley.edu
+
+sdoty@odie.santarosa.edu (Scott Doty) writes:
+
+> But it does look like csrc.ncsl.nist.gov has become an
+> un-machine.  If someone would try ftp'ing to it, or knows what's up, 
+> I'd really appreciate the info. 
+
+csrc.ncsl.nist.gov (129.6.54.11) is ftp-able from here...
+
+
+Steve

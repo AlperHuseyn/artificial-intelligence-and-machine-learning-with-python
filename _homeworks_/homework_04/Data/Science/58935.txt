@@ -1,0 +1,14 @@
+Message-ID: <1qrsr6$d59@access.digex.net>
+References: <13APR199308003715@delphi.gsfc.nasa.gov> <lso15qINNkpr@news.bbn.com>
+NNTP-Posting-Host: access.digex.net
+
+In article <lso15qINNkpr@news.bbn.com> sher@bbn.com (Lawrence D. Sher) writes:
+> From the N.E.J.Med.  editorial:  "The dicarboxylic amino acid glutamate
+> is not only an essential amino acid ...
+
+Glutamate is not an essential amino acid.  People can survive quite well
+without ever eating any.
+-- 
+Keith Lynch, kfl@access.digex.com
+
+f p=2,3:2 s q=1 x "f f=3:2 q:f*f>p!'q  s q=p#f" w:q p,?$x\8+1*8

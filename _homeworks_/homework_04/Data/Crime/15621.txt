@@ -1,0 +1,34 @@
+Distribution: na
+Message-ID: <ELEE9SF.93Apr21095141@menudo.menudo.UH.EDU>
+References: <tcmayC5M2xv.JEx@netcom.com> <1qpg8fINN982@dns1.NMSU.Edu> <115863@bu.edu>
+	<strnlghtC5nrHw.1qB@netcom.com>
+NNTP-Posting-Host: menudo.uh.edu
+In-reply-to: strnlght@netcom.com's message of Sun, 18 Apr 1993 02:41:55 GMT
+
+
+David Sternlight writes:
+
+> I'd trust something from the NSA long before I'd trust something from
+> some Swiss or anbody Japanese.
+
+What???  This is an incredible statement!  The NSA tried to suppress
+public key crypto and RSA, and yet they claim to encourage use of
+strong crypto for US citizens.
+
+Would you trust a black-box from the NSA versus an "open system" from
+elsewhere?
+
+/-----------------------------------\
+| Karl L. Barrus                    |
+| elee9sf@menudo.uh.edu             | <- preferred address
+| barrus@tree.egr.uh.edu (NeXTMail) |
+\-----------------------------------/
+
+
+
+--
+/-----------------------------------\
+| Karl L. Barrus                    |
+| elee9sf@menudo.uh.edu             | <- preferred address
+| barrus@tree.egr.uh.edu (NeXTMail) |
+\-----------------------------------/

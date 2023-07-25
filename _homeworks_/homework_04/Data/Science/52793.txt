@@ -1,0 +1,11 @@
+Message-ID: <1psfh5INNs86@hp-col.col.hp.com>
+References: <1pqb8aINN9vg@hp-col.col.hp.com>
+NNTP-Posting-Host: hpctdkz.col.hp.com
+
+I've seen several references to split- or separate-beam radars, which I
+claimed didn't exist.  Gotta eat some crow here - I wasn't aware of them.
+All I really knew was that it can be done with one beam.
+
+I believe the rest of what I said is accurate, though.
+
+Mmmmmmm....crow.... (oops-wrong group)

@@ -1,0 +1,16 @@
+Distribution: world
+Message-ID: <1r2c9c$l04@access.digex.net>
+References: <1993Apr20.204335.157595@zeus.calpoly.edu> <20APR199321040621@kelvin.jpl.nasa.gov>
+NNTP-Posting-Host: access.digex.net
+
+
+
+Some birds require constant management for survival.  Pointing a sensor at
+the sun, even when powered down, may burn it out.  Pointing a
+parabolic antenna  at Sol,  from venus orbit  may trash the
+foci  elements.
+
+Even if you let teh bird drift,  it may  get hosed by some
+cosmic phenomena.   
+
+pat

@@ -1,0 +1,26 @@
+Distribution: na
+Message-ID: <1qnn7b$ddc@sol.TIS.COM>
+References: <C5L17v.GH5@dove.nist.gov> <1qmugcINNpu9@gap.caltech.edu> <1993Apr17.001805.11432@clarinet.com>
+NNTP-Posting-Host: sol.tis.com
+
+brad@clarinet.com (Brad Templeton) writes:
+>And this means that the FBI will want to track the customer lists of
+>better encryption phones, because "the only reason a person would want
+>one is to evade the police."
+
+	Then they'll probably also want to start tracking the customer
+lists of people purchasing SoundBlaster and similar boards, which can
+be configured with the use of some code and a modem, to act as a pretty
+decent digital-encrypting telephone. It's expensive, though, and kind
+of awkward. I don't know any drug lords, but I'm sure they'd favor
+something tappable over something secure as long as the user interface
+is nice.
+
+	When you've got HRH Prince of Wales saying stupid things over
+cordless phones, it's not hard to imagine that drug dealers, child
+pornographers, commies, LISP programmers, and other threats to the
+civilized world might transact incriminating business over "encrypting"
+cellular phones.
+
+
+mjr.

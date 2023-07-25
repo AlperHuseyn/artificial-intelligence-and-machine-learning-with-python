@@ -1,0 +1,9 @@
+Sender: news@ulrik.uio.no (Mr News)
+Nntp-Posting-Host: pcgeo23.uio.no
+Organization: University of Oslo
+Date: Fri, 16 Apr 1993 13:41:30 GMT
+Lines: 3
+
+
+this is a tesrt
+s

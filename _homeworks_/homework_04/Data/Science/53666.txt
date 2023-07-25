@@ -1,0 +1,13 @@
+Distribution: world
+Message-ID: <1qp148INNb6k@crcnis1.unl.edu>
+References: <C5J4JM.BII@boi.hp.com>
+NNTP-Posting-Host: unlinfo.unl.edu
+
+I've also found that the electronic starters on these "instant-on" 
+compact fluourescent lamp fixtures kick out interference that nukes
+my cordless phone.  (I can hear it in my guitar amplifier, too...)
+--
+paul marxhausen .... ....... ............. ............ ............ .......... 
+ .. . .  . . . university of nebraska - lincoln .  . . .. . .  .. . . . . . . .
+ .     .    .  .   .     .   .  .    .   .  .   .    .   .  grace .   .    .  . 
+   .         .       .      .        .        .      .        .   happens .     
