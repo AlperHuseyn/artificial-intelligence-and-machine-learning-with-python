@@ -68,54 +68,23 @@ Returns:
         
     return hist, loss, category_accuracy, predictions
 
-def plot_epoch_loss_graph(hist, title='Epoch-Loss Graph'):
+def plot_metric_graph(hist, metric, title):
     """
-    Plot the training and validation loss as a function of epochs.
+    Plot the training and validation metric as a function of epochs.
 
     Args:
         hist (keras.callbacks.History): Training history object.
+        metric (str): Name of the metric to plot.
         title (str): Title for the plot.
     """
-    x = hist.epoch
-    y = hist.history['loss']
-    z = hist.history['val_loss']
-    
     # Create plot with custom styling
-    fig, ax = plt.subplots(figsize=(15, 5))
-    ax.plot(x, y, linewidth=2, color='blue', label='tarining loss')
-    ax.plot(x, z, linewidth=2, color='orange', label='validation loss')
-    ax.set_title('Epochs vs Loss')
-    ax.set_xlabel('Epochs')
-    ax.set_ylabel('Loss')
-    ax.grid(alpha=.5)
-    ax.legend()
-    
-    # Save the plot as a JPEG file
-    plt.savefig(f'{title}.jpg', dpi=300, bbox_inches='tight')
-    
-    # Show plot
-    plt.show()
-    
-def plot_epoch_categorical_accuracy_graph(hist, title='Epoch-Categorical Accuracy Graph'):
-    """
-   Plot the training and validation Categorical Accuracy as a function of epochs.
-
-   Args:
-       hist (keras.callbacks.History): Training history object.
-       title (str): Title for the plot.
-   """
-    x = hist.epoch
-    y = hist.history['categorical_accuracy']
-    z = hist.history['val_categorical_accuracy']
-    
-    # Create plot with custom styling
-    fig, ax = plt.subplots(figsize=(15, 5))
-    ax.plot(x, y, linewidth=2, color='blue', label='tarining categorical accuracy')
-    ax.plot(x, z, linewidth=2, color='orange', label='validation categorical accuracy')
-    ax.set_title('Epochs vs categorical_accuracy')
-    ax.set_xlabel('Epochs')
-    ax.set_ylabel('categorical_accuracy')
-    ax.grid(alpha=.5)
+    plt.figure(figsize=(15, 5))
+    plt.plot(hist.epoch, hist.history[metric], linewidth=2, color='blue', label=f'training {metric}')
+    plt.plot(hist.epoch, hist.history[f'val_{metric}'], linewidth=2, color='orange', label=f'validation {metric}')
+    plt.title(f'Epochs vs {metric}')
+    plt.xlabel('Epochs')
+    plt.ylabel(metric)
+    plt.grid(alpha=0.5)
     plt.legend()
     
     # Save the plot as a JPEG file
@@ -123,112 +92,46 @@ def plot_epoch_categorical_accuracy_graph(hist, title='Epoch-Categorical Accurac
     
     # Show plot
     plt.show()
-
-def get_subfolders(parent, crime, entertainment, politics, science):
+    
+def get_subfolders(parent, category_folders):
     """
-    Extract and organize crime, entertainment, politics, and science  subfolders from the parent directory.
+    Extract and organize subfolders from the parent directory.
 
     Args:
         parent (str): Path to the parent directory.
-        crime (str): Name of the crime subfolder.
-        entertainment (str): Name of the entertainment subfolder.
-        politics (str): Name of the politics subfolder.
-        science (str): Name of the science subfolder.
-        
+        category_folders (list): List of category subfolders.
+
     Returns:
-        list: List of text data from crime, entertainment, politics, and science subfolders.
-        list: List of corresponding labels.
+        pandas.DataFrame: Concatenated data from the category subfolders.
     """
-    crime_path = None
-    entertainment_path = None
-    politics_path = None
-    science_path = None
-    
-    for dirpath, dirnames, filenames in os.walk(parent):
-        # Iterate over the subdirectories in the current directory
-        for dirname in dirnames:
-            if dirname == crime:
-                crime_path = os.path.join(dirpath, dirname)
-                if entertainment_path is not None and politics_path is not None and science_path is not None:
-                    break  # Stop the iteration if both folders are found
-            elif dirname == entertainment:
-                entertainment_path = os.path.join(dirpath, dirname)
-                if crime_path is not None and politics_path is not None and science_path is not None:
-                    break  # Stop the iteration if both folders are found
-            elif dirname == politics:
-                politics_path = os.path.join(dirpath, dirname)
-                if crime_path is not None and entertainment_path is not None and science_path is not None:
-                    break  # Stop the iteration if both folders are found
-            elif dirname == science:
-                science_path = os.path.join(dirpath, dirname)
-                if crime_path is not None and entertainment_path is not None and politics_path is not None:
-                    break  # Stop the iteration if both folders are found
-                    
-        if crime_path is not None and entertainment_path is not None and politics_path is not None and science_path is not None:
-            break  # Stop the iteration if both folders are found
-            
-    crime_files = []
-    entertainment_files = []
-    politics_files = []
-    science_files = []
-    
-    if crime_path is not None:
-        for filename in os.listdir(crime_path):
-            file_path = os.path.join(crime_path, filename)
-            if os.path.isfile(file_path):
-                with open(file_path, 'r', encoding='latin1') as file:
-                    crime_files.append(file.read())
-                    y_crime = [f'{crime}'] * len(crime_files)
-        crime_dataframe = pd.DataFrame(data={'Emails': crime_files, 'Category': y_crime}) 
-                    
-    if entertainment_path is not None:
-        for filename in os.listdir(entertainment_path):
-            file_path = os.path.join(entertainment_path, filename)
-            if os.path.isfile(file_path):
-                with open(file_path,'r', encoding='latin1') as file:
-                    entertainment_files.append(file.read())
-                    y_entertainment = [f'{entertainment}'] * len(entertainment_files)
-        entertainment_dataframe = pd.DataFrame(data={'Emails': entertainment_files, 'Category': y_entertainment}) 
-                    
-    if politics_path is not None:
-        for filename in os.listdir(politics_path):
-            file_path = os.path.join(politics_path, filename)
-            if os.path.isfile(file_path):
-                with open(file_path, 'r', encoding='latin1') as file:
-                    politics_files.append(file.read())
-                    y_politics = [f'{politics}'] * len(politics_files)
-        politics_dataframe = pd.DataFrame(data={'Emails': politics_files, 'Category': y_politics}) 
-                    
-    if science_path is not None:
-        for filename in os.listdir(science_path):
-            file_path = os.path.join(science_path, filename)
-            if os.path.isfile(file_path):
-                with open(file_path, 'r', encoding='latin1') as file:
-                    science_files.append(file.read())
-                    y_science = [f'{science}'] * len(science_files)
-        science_dataframe = pd.DataFrame(data={'Emails': science_files, 'Category': y_science}) 
-    
-    dataset = pd.concat([crime_dataframe, entertainment_dataframe, politics_dataframe, science_dataframe])
-    
-    return dataset
+    data = []
+    for category in category_folders:
+        category_path = os.path.join(parent, category)
+        if os.path.exists(category_path):
+            for filename in os.listdir(category_path):
+                file_path = os.path.join(category_path, filename)
+                if os.path.isfile(file_path):
+                    with open(file_path, 'r', encoding='latin1') as file:
+                        data.append({'Emails': file.read(), 'Category': category})
+    return pd.DataFrame(data)
 
 def main():
     """
     Main function to train and evaluate the iris prediction model.
     """
     # Read email data from folders as pandas DataFrame
-    email_data = get_subfolders(r'Data', 'Crime', 'Entertainment', 'Politics', 'Science')
+    email_data = get_subfolders(r'Data', ['Crime', 'Entertainment', 'Politics', 'Science'])
     
     # Split the dataset into training and test sets using train_test_split function
     training_set, test_set = train_test_split(email_data, test_size=.2)
     
     # Separate the input features (X_train) and output values (y_train) of the training dataset
     X_train = training_set['Emails'].tolist()
-    y_train = training_set.iloc[:, -1]
+    y_train = training_set['Category']
     
     # Separate the input features (X_test) and output values (y_test) of the training dataset
     X_test = test_set['Emails'].tolist()
-    y_test = test_set.iloc[:, -1]
+    y_test = test_set['Category']
     
     # Convert labels to a NumPy array for indexing purposes
     labels = np.array(np.unique(y_train))
@@ -260,8 +163,8 @@ def main():
     del email_data, email_data_to_predict, test_set, training_set
     
     # Plot the loss and categoracal accuracy for each epoch during training
-    plot_epoch_loss_graph(hist, title='Epoch-Loss Graph')    
-    plot_epoch_categorical_accuracy_graph(hist, title='Epoch-Categorical Accuracy Graph')
+    plot_metric_graph(hist, metric='loss', title='Epoch-Loss Graph')    
+    plot_metric_graph(hist, metric='categorical_accuracy', title='Epoch-Categorical Accuracy Graph')
     
     # Print the test loss and categorical accuracy of the trained model
     print('################################')
