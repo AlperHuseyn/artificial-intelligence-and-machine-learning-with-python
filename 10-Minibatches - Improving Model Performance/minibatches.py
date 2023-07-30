@@ -97,13 +97,13 @@ def train_evaluate_save_model(X_train, y_train, X_valid, y_valid, X_test, y_test
     
     # Train the model using the custom data generator for training, test, and validation data
     hist = model.fit(train_data_generator, epochs=epochs, validation_data=valid_data_generator)
-    print('\n\n')
+    print()
     # Evaluate the model on the test dataset
     loss, binary_accuracy = model.evaluate(test_data_generator)
-    print('\n\n')
+    print()
     # Predict review-sentiment from comments
     predictions = model.predict(pred_data_generator)
-    print('\n\n')
+    print()
     
     model.save(f'{name}.h5')
         
@@ -155,7 +155,7 @@ def main():
     X_train = training_data['review']
     y_train = training_data.iloc[:, -1]
 
-# Separate the input features (X_test) and output values (y_test) of the test dataset
+    # Separate the input features (X_test) and output values (y_test) of the test dataset
     X_test = test_data['review']
     y_test = test_data.iloc[:, -1]
     
