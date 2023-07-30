@@ -16,17 +16,18 @@ class CustomDataGenerator(Sequence):
         self.batch_size = batch_size
         self.vectorizer = vectorizer
         self.shuffle = shuffle
-        self.indices = list(range(len(self.data) // self.batch_size))
+        self.indices = np.arange(len(self.data))
         
     def __len__(self):
         return int(np.ceil(len(self.data) / self.batch_size))
     
-    def __getitem__(self, index):
-        starting = self.indices[index] * self.batch_size
-        stopping = (self.indices[index] + 1) * self.batch_size
-        
-        batch_data = self.vectorizer.transform(self.data.iloc[starting:stopping]).toarray()
-        batch_labels = self.labels[starting:stopping]
+    def __getitem__(self, index):        
+        start_idx = self.indices[index] * self.batch_size 
+        stop_idx = (self.indices[index] + 1) * self.batch_size
+                
+        # Read and transform the data in batches
+        batch_data = self._vectorizer_transform(self.data.iloc[start_idx:stop_idx])
+        batch_labels = self.labels.iloc[start_idx:stop_idx]
         
         return batch_data, np.array(batch_labels)
     
@@ -34,6 +35,10 @@ class CustomDataGenerator(Sequence):
         # Shuffle the data at the end of each epoch
         if self.shuffle:
             np.random.shuffle(self.indices)
+    
+    def _vectorizer_transform(self, data):
+        # Transform the data once and store it in dense array format
+        return self.vectorizer.transform(data).toarray()
 
 def create_IMDB_model(input_dim, name=None):
     """
@@ -88,13 +93,14 @@ def train_evaluate_save_model(X_train, y_train, X_valid, y_valid, X_test, y_test
     train_data_generator = CustomDataGenerator(X_train, y_train, batch_size, vectorizer)
     valid_data_generator = CustomDataGenerator(X_valid, y_valid, batch_size, vectorizer, shuffle=False)
     test_data_generator = CustomDataGenerator(X_test, y_test, batch_size,vectorizer, shuffle=False)    
+    pred_data_generator = CustomDataGenerator(X_to_predict, [], batch_size, vectorizer)
     
     # Train the model using the custom data generator for training, test, and validation data
     hist = model.fit(train_data_generator, epochs=epochs, validation_data=valid_data_generator)
     # Evaluate the model on the test dataset
     loss, binary_accuracy = model.evaluate(test_data_generator)
     # Predict review-sentiment from comments
-    predictions = model.predict(X_to_predict)
+    predictions = model.predict(pred_data_generator)
     
     model.save(f'{name}.h5')
         
@@ -189,19 +195,23 @@ def main():
     vectorizer = CountVectorizer(dtype='uint8', binary=True)
     vectorizer.fit(pd.concat([X_train, X_valid, X_test]))
     
+    """
     # Convert text data to numerical representations using the CountVectorizer
     X_train = vectorizer.transform(X_train).toarray()
     X_valid = vectorizer.transform(X_valid).toarray()
     X_test = vectorizer.transform(X_test).toarray()
+    """
     
     # Load the array to be predicted and perform feature scaling on it
-    IMDB_data_to_predict = pd.read_csv('predicted.csv')['review'].tolist()
-    
+    IMDB_data_to_predict = pd.read_csv('predicted.csv')['review']
+
+    """
     # Apply vectorization to the data array for prediction
     IMDB_data_to_predict_vector = vectorizer.transform(IMDB_data_to_predict).toarray()
+    """
     
     # Train and evaluate the machine learning model using the training and test data
-    hist, loss, binary_accuracy, predictions = train_evaluate_save_model(X_train, y_train, X_valid, y_valid, X_test, y_test, vectorizer, IMDB_data_to_predict_vector, name='IMDB-sentiment')
+    hist, loss, binary_accuracy, predictions = train_evaluate_save_model(X_train, y_train, X_valid, y_valid, X_test, y_test, vectorizer, IMDB_data_to_predict, name='IMDB-sentiment')
     
     # Free up memory
     del IMDB_data, training_set, X_train, X_test, X_valid, y_valid, y_train, y_test, IMDB_data_to_predict        
