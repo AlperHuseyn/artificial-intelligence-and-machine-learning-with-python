@@ -40,7 +40,7 @@ class CustomDataGenerator(Sequence):
         # Transform the data once and store it in dense array format
         return self.vectorizer.transform(data).toarray()
 
-def create_IMDB_model(input_dim, name=None):
+def create_IMDB_model(input_dim, num_categories, name=None):
     """
     Create a 2-layer Sequential model for IMDB review-sentiment prediction.
 
@@ -57,7 +57,7 @@ def create_IMDB_model(input_dim, name=None):
     # The final layer has a three neuron with a sigmoid activation function
     model.add(Dense(64, activation='relu', input_dim=input_dim, name='Hidden1'))
     model.add(Dense(64, activation='relu', name='Hidden2'))
-    model.add(Dense(1, activation='sigmoid', name='output'))
+    model.add(Dense(num_categories, activation='sigmoid', name='output'))
     
     # Print model info on console
     model.summary()
@@ -67,7 +67,7 @@ def create_IMDB_model(input_dim, name=None):
     
     return model
 
-def train_evaluate_save_model(X_train, y_train, X_valid, y_valid, X_test, y_test, vectorizer, X_to_predict, batch_size=32, name='model', epochs=5):
+def train_evaluate_save_model(X_train, y_train, X_valid, y_valid, X_test, y_test, num_categories, vectorizer, X_to_predict, batch_size=32, name='model', epochs=5):
     """
     Train, evaluate, and save the IMDB review-sentiment prediction model.
 
@@ -87,73 +87,45 @@ def train_evaluate_save_model(X_train, y_train, X_valid, y_valid, X_test, y_test
         numpy.ndarray: Predicted IMDB review-sentiment.
     """
     # Create model using create_IMDB_model func.
-    model = create_IMDB_model(input_dim=len(vectorizer.vocabulary_), name='IMDB-review-sentiment')
+    model = create_IMDB_model(input_dim=len(vectorizer.vocabulary_), num_categories=num_categories, name='IMDB-review-sentiment')
     
     # Create custom data generators for training, validation, and testing
     train_data_generator = CustomDataGenerator(X_train, y_train, batch_size, vectorizer)
     valid_data_generator = CustomDataGenerator(X_valid, y_valid, batch_size, vectorizer, shuffle=False)
     test_data_generator = CustomDataGenerator(X_test, y_test, batch_size,vectorizer, shuffle=False)    
-    pred_data_generator = CustomDataGenerator(X_to_predict, [], batch_size, vectorizer)
+    pred_data_generator = CustomDataGenerator(X_to_predict, pd.Series(dtype='uint8'), batch_size, vectorizer)
     
     # Train the model using the custom data generator for training, test, and validation data
     hist = model.fit(train_data_generator, epochs=epochs, validation_data=valid_data_generator)
+    print('\n\n')
     # Evaluate the model on the test dataset
     loss, binary_accuracy = model.evaluate(test_data_generator)
+    print('\n\n')
     # Predict review-sentiment from comments
     predictions = model.predict(pred_data_generator)
+    print('\n\n')
     
     model.save(f'{name}.h5')
         
     return hist, loss, binary_accuracy, predictions
 
-def plot_epoch_loss_graph(hist, title='Epoch-Loss Graph'):
+def plot_metric_graph(hist, metric, title):
     """
-    Plot the training and validation loss as a function of epochs.
+    Plot the training and validation metric as a function of epochs.
 
     Args:
         hist (keras.callbacks.History): Training history object.
+        metric (str): Name of the metric to plot.
         title (str): Title for the plot.
     """
-    x = hist.epoch
-    y = hist.history['loss']
-    z = hist.history['val_loss']
-    
     # Create plot with custom styling
-    fig, ax = plt.subplots(figsize=(15, 5))
-    ax.plot(x, y, linewidth=2, color='blue', label='tarining loss')
-    ax.plot(x, z, linewidth=2, color='orange', label='validation loss')
-    ax.set_title('Epochs vs Loss')
-    ax.set_xlabel('Epochs')
-    ax.set_ylabel('Loss')
-    ax.grid(alpha=.5)
-    ax.legend()
-    
-    # Save the plot as a JPEG file
-    plt.savefig(f'{title}.jpg', dpi=300, bbox_inches='tight')
-    
-    # Show plot
-    plt.show()
-    
-def plot_epoch_binary_accuracy_graph(hist, title='Epoch-Binary Accuracy Graph'):
-    """
-   Plot the training and validation Binary Accuracy as a function of epochs.
-
-   Args:
-       hist (keras.callbacks.History): Training history object.
-       title (str): Title for the plot.
-   """
-    x = hist.epoch
-    y = hist.history['binary_accuracy']
-    z = hist.history['val_binary_accuracy']
-    
-    # Create plot with custom styling
-    fig, ax = plt.subplots(figsize=(15, 5))
-    ax.plot(x, y, linewidth=2, color='blue', label='tarining binary accuracy')
-    ax.plot(x, z, linewidth=2, color='orange', label='validation binary accuracy')
-    ax.set_title('Epochs vs binary_accuracy')
-    ax.set_xlabel('Epochs')
-    ax.set_ylabel('binary_accuracy')
-    ax.grid(alpha=.5)
+    plt.figure(figsize=(15, 5))
+    plt.plot(hist.epoch, hist.history[metric], linewidth=2, color='blue', label=f'training {metric}')
+    plt.plot(hist.epoch, hist.history[f'val_{metric}'], linewidth=2, color='orange', label=f'validation {metric}')
+    plt.title(f'Epochs vs {metric}')
+    plt.xlabel('Epochs')
+    plt.ylabel(metric)
+    plt.grid(alpha=0.5)
     plt.legend()
     
     # Save the plot as a JPEG file
@@ -210,15 +182,18 @@ def main():
     IMDB_data_to_predict_vector = vectorizer.transform(IMDB_data_to_predict).toarray()
     """
     
+    # 0 for negatives and 1 for positives
+    num_categories = 1
+    
     # Train and evaluate the machine learning model using the training and test data
-    hist, loss, binary_accuracy, predictions = train_evaluate_save_model(X_train, y_train, X_valid, y_valid, X_test, y_test, vectorizer, IMDB_data_to_predict, name='IMDB-sentiment')
+    hist, loss, binary_accuracy, predictions = train_evaluate_save_model(X_train, y_train, X_valid, y_valid, X_test, y_test,  num_categories, vectorizer, IMDB_data_to_predict, name='IMDB-sentiment')
     
     # Free up memory
     del IMDB_data, training_set, X_train, X_test, X_valid, y_valid, y_train, y_test, IMDB_data_to_predict        
     
-    # Plot the loss and binary_accuracy for each epoch during training
-    plot_epoch_loss_graph(hist, title='Epoch-Loss Graph')    
-    plot_epoch_binary_accuracy_graph(hist, title='Epoch-Binary Accuracy Graph')
+    # Plot the loss and categoracal accuracy for each epoch during training
+    plot_metric_graph(hist, metric='loss', title='Epoch-Loss Graph')    
+    plot_metric_graph(hist, metric='binary_accuracy', title='Epoch-Binary Accuracy Graph')
     
     # Print the test loss and binary_accuracy of the trained model
     print('################################')
