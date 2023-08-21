@@ -52,6 +52,15 @@ Contributions are welcome! If you have any suggestions, bug reports, or new code
 
 This repository is licensed under the [MIT License](LICENSE). You are free to use, modify, and distribute the code examples and resources for both personal and commercial purposes. However, attribution to the original authors is highly appreciated.
 
+# My Achievements
+
+## Certificate of Completion
+
+![Certificate](https://github.com/AlperHuseyn/artificial-intelligence-and-machine-learning-with-python/blob/main/certificate-of-completion.pdf)
+
+I successfully completed the Artificial Intelligence and Machine Learning course. This certificate acknowledges my achievement and demonstrates my commitment to continuous learning.
+
+
 ---
 
 Thank you for visiting the **Artificial Intelligence and Machine Learning with Python** repository! Happy coding and exploring the fascinating world of AI and ML!
