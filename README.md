@@ -56,7 +56,7 @@ This repository is licensed under the [MIT License](LICENSE). You are free to us
 
 ## Certificate of Completion
 
-![Certificate](https://github.com/AlperHuseyn/artificial-intelligence-and-machine-learning-with-python/blob/main/certificate-of-completion.pdf)
+![Certificate](https://github.com/AlperHuseyn/artificial-intelligence-and-machine-learning-with-python/blob/main/certificate-of-completion.pdf "Certificate of Completion")
 
 I successfully completed the Artificial Intelligence and Machine Learning course. This certificate acknowledges my achievement and demonstrates my commitment to continuous learning.
 
