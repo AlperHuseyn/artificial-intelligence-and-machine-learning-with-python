@@ -16,13 +16,16 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense
+import os
 
+
+cwd = os.getcwd()
 
 # Define the divide ratio for splitting the dataset
 DIVIDE_RATIO = .8
 
 # Read diabetes data from csv file as pandas DataFrame
-diabetes_data = pd.read_csv('diabetes.csv')
+diabetes_data = pd.read_csv(os.path.join(cwd, '02-keras-2L-diabetes-predict/diabetes.csv'))
 
 # Split the dataset into training and test sets using train_test_split function
 train_dataset, test_set = train_test_split(diabetes_data, test_size=1-DIVIDE_RATIO)
@@ -62,7 +65,7 @@ score = model.evaluate(X_test, y_test, verbose=0)
 print('Test accuracy:', score[1])
 
 # Load the array to be predicted
-diabetes_data_to_predict = pd.read_csv('predicted.csv').to_numpy()
+diabetes_data_to_predict = pd.read_csv(os.path.join(cwd, '02-keras-2L-diabetes-predict/predicted.csv')).to_numpy()
 
 # Predict if person has diabetes
 predictions = model.predict(diabetes_data_to_predict)
