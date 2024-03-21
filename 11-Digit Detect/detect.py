@@ -21,7 +21,7 @@ def create_MNIST_model(input_dim, num_categories, name=None):
 
     # Define the architecture of the neural network by adding layers to the model
     # The first two layers have 256, 128 neurons respectively with a ReLU activation function
-    # The final layer has a num_categories neuron with a softmax activation function
+    # The final layer has a `num_categories` neuron with a softmax activation function
     model.add(Dense(256, activation='relu', input_dim=input_dim, name='Hidden1'))
     model.add(Dense(128, activation='relu', name='Hidden2'))
     model.add(Dense(num_categories, activation='softmax', name='output'))
@@ -98,7 +98,7 @@ def get_prediction_images(model, folder_name, ext):
 
 def main():
     """
-    Main function to train and evaluate the iris prediction model.
+    Main function to train and evaluate the MNIST prediction model.
     """
     # Read MNIST train and test data from data file as pandas DataFrame
     MNIST_train_data = pd.read_csv('mnist_train.csv')
