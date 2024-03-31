@@ -6,12 +6,16 @@ Please note that this repository is not entirely my own work. The notes and reso
 
 ## Table of Contents
 
-- [Introduction](#introduction)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
+- [Artificial Intelligence and Machine Learning with Python](#artificial-intelligence-and-machine-learning-with-python)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Features](#features)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Contributing](#contributing)
+  - [License](#license)
+- [My Achievements](#my-achievements)
+  - [Certificate of Completion](#certificate-of-completion)
 
 ## Introduction
 
@@ -38,8 +42,8 @@ This repository is organized into directories based on different AI and ML topic
 To run a specific code example or tutorial, navigate to the respective directory and execute the Python script. For example:
 
 ```shell
-cd supervised-learning
-python decision_tree_classification.py
+cd 11-Digit Detect
+python detect.py
 ```
 
 Feel free to modify and experiment with the code to better understand the concepts and algorithms. The code files contain comments to help you understand the implementation.
