@@ -12,6 +12,7 @@ Please note that this repository is not entirely my own work. The notes and reso
   - [Features](#features)
   - [Installation](#installation)
   - [Usage](#usage)
+  - [Project Overview](#project-overview)
   - [Contributing](#contributing)
   - [License](#license)
 - [My Achievements](#my-achievements)
@@ -47,6 +48,23 @@ python detect.py
 ```
 
 Feel free to modify and experiment with the code to better understand the concepts and algorithms. The code files contain comments to help you understand the implementation.
+
+## Project Overview
+Each project in this repository is designed to introduce a specific topic within artificial intelligence and machine learning, providing both theoretical insights and practical coding examples.
+
+- **00-melb-data-preparation**: Learn the basics of data cleaning and preparation with the Melbourne Housing dataset.
+- **01-data-divide**: Explore techniques for dividing datasets into training, validation, and test sets for machine learning models.
+- **02-keras-2L-diabetes-predict**: Dive into neural networks with a Keras model predicting diabetes.
+- **03-Visualize-Activation-Functions**: Visualize different neural network activation functions and their impacts on model performance.
+- **04-keras-snapshots**: Introduction to saving and loading Keras model snapshots.
+- **05-keras-callbacks - Improving Model Performance**: Utilize Keras callbacks to enhance model training processes.
+- **06-feature-scaling - Improving Model Performance**: Understand the importance of feature scaling in model performance.
+- **07-AutoMPG-Simple Linear Regression**: Simple linear regression model predicting automobile fuel efficiency.
+- **08-Iris-Multi-Class Classification**: Multi-class classification on the Iris dataset.
+- **09-SentimentSense**: Sentiment analysis project.
+- **10-Minibatches - Improving Model Performance**: Learn how minibatches can improve the performance of your models.
+- **11-Digit Detect**: Dive into digit recognition with a convolutional neural network.
+
 
 ## Contributing
 
