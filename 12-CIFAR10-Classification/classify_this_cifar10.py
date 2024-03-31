@@ -5,8 +5,9 @@ concatenate them, handling both training and test datasets.
 """
 
 import os
-import numpy as np
+import pickle
 from typing import List, Dict, Any
+import numpy as np
 
 
 def unpickle(file_path: str) -> Dict[bytes, Any]:
@@ -19,7 +20,6 @@ def unpickle(file_path: str) -> Dict[bytes, Any]:
     Returns:
         Dict[bytes, Any]: The contents of the unpickled file.
     """
-    import pickle
 
     with open(file_path, "rb") as fo:
         data_dict = pickle.load(fo, encoding="bytes")
@@ -35,8 +35,9 @@ def concat_datasets(dataset_paths: List[str]) -> Dict[str, Any]:
         dataset_paths (List[str]): A list of paths to the CIFAR dataset files.
 
     Returns:
-        np.ndarray: A NumPy array containing concatenated data and labels, where data has shape (N, 3072)
-                    and labels are appended as the last column, resulting in shape (N, 3073) for the array.
+        np.ndarray: A NumPy array containing concatenated data and labels, where data has
+        shape (N, 3072) and labels are appended as the last column, resulting in shape
+        (N, 3073) for the array.
     """
 
     data_arrays = []
