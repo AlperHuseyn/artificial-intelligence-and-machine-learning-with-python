@@ -11,6 +11,7 @@ from tensorflow.keras.utils import Sequence
 
 class CustomDataGenerator(Sequence):
     def __init__(self, data, labels, batch_size, vectorizer, shuffle=True):
+        super().__init__()
         self.data = data
         self.labels = labels
         self.batch_size = batch_size
