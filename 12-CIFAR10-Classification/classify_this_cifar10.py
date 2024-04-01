@@ -15,6 +15,7 @@ from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
 from tensorflow.keras.models import Model
 from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.preprocessing.image import img_to_array, load_img
 
 
 def unpickle(file_path: str) -> Dict[bytes, Any]:
@@ -53,7 +54,7 @@ def concat_datasets(dataset_paths: List[str]) -> np.ndarray:
     for path in dataset_paths:
         dataset = unpickle(path)
         data_arrays.append(np.array(dataset[b"data"], dtype=np.float32))
-        label_arrays.append(np.array(dataset[b"labels"], dtype=np.float32))
+        label_arrays.append(np.array(dataset[b"labels"], dtype=np.int32))
 
     combined_data = np.vstack(data_arrays)
     combined_labels = np.hstack(label_arrays)
@@ -163,8 +164,9 @@ def train_evaluate_save_cifar_model(
     # Save the model
     model.save(f"{name}.h5")
 
-    # Optionally, you might want to return the entire history object and the model's performance metrics
-    return hist.history, loss, categorical_accuracy
+    # Optionally, you might want to return the entire history object and
+    # the model's performance metrics
+    return hist, loss, categorical_accuracy
 
 
 def plot_metric_graph(hist, metric, title):
@@ -205,14 +207,23 @@ def plot_metric_graph(hist, metric, title):
     plt.show()
 
 
-def get_prediction_images(model, folder_name, ext):
+def get_prediction_images(model, folder_name, ext, class_names):
     for path in glob.glob(f"{folder_name}/*.{ext}"):
-        img_data = plt.imread(path)
-        grayed = np.average(img_data, axis=2, weights=[0.3, 0.59, 0.11]) / 255
-        # Reshape and replicate across three channels to match the expected input shape
-        grayed_replicated = np.repeat(grayed.reshape(32, 32, 1), 3, axis=2)
-        prediction = model.predict(grayed_replicated.reshape(1, 32, 32, 3))
-        print(f"{path}: {np.argmax(prediction)}")
+        # Load image using Keras, resize it to 32x32 pixels (the input shape the model expects)
+        # and convert it to an array.
+        img = load_img(path, target_size=(32, 32))
+        img_array = img_to_array(img)
+
+        # The model expects a 4D batch as input, so we add a dimension with np.expand_dims
+        img_batch = np.expand_dims(img_array, axis=0)
+
+        # Normalize the image data to 0-1
+        img_batch /= 255.0
+
+        # Make predictions
+        prediction = model.predict(img_batch)
+        predicted_class = class_names[np.argmax(prediction)]
+        print(f"{path}: {predicted_class}")
 
 
 def main():
@@ -278,7 +289,7 @@ def main():
         y_test_one_hot,
         batch_size=32,
         name="cifar_model",
-        epochs=20,
+        epochs=5,
     )
 
     # Plot the loss and categoracal accuracy for each epoch during training
@@ -293,22 +304,15 @@ def main():
     print(f"loss: {loss:.2f}\ncategorical_accuracy: {categorical_accuracy:.2f}")
     print("################################")
 
+    # Load the label names from batches.meta
+    meta_data = unpickle(os.path.join(cifar_10_batches_dir, "batches.meta"))
+    label_names = meta_data[b"label_names"]
+
     # Dictionary mapping model output indexes to class names
-    class_names = {
-        0: "airplane",
-        1: "automobile",
-        2: "bird",
-        3: "cat",
-        4: "deer",
-        5: "dog",
-        6: "frog",
-        7: "horse",
-        8: "ship",
-        9: "truck",
-    }
+    class_names = {i: label.decode("utf-8") for i, label in enumerate(label_names)}
 
     # Print the predicted detection for each individual in the folder
-    get_prediction_images(cifar_model, "test-images", "jpg")
+    get_prediction_images(cifar_model, "test-images", "jpg", class_names)
 
 
 if __name__ == "__main__":
