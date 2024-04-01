@@ -7,11 +7,12 @@ a convolutional neural network model for CIFAR-10 image classification.
 
 import os
 import pickle
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple
 import numpy as np
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
 from tensorflow.keras.models import Model
+from tensorflow.keras.utils import to_categorical
 
 
 def unpickle(file_path: str) -> Dict[bytes, Any]:
@@ -30,7 +31,7 @@ def unpickle(file_path: str) -> Dict[bytes, Any]:
     return data_dict
 
 
-def concat_datasets(dataset_paths: List[str]) -> Dict[str, Any]:
+def concat_datasets(dataset_paths: List[str]) -> np.ndarray:
     """
     Concatenates datasets from a list of CIFAR dataset file paths into a single NumPy array,
     combining both data and labels.
@@ -49,8 +50,8 @@ def concat_datasets(dataset_paths: List[str]) -> Dict[str, Any]:
 
     for path in dataset_paths:
         dataset = unpickle(path)
-        data_arrays.append(np.array(dataset[b"data"], dtype=np.int32))
-        label_arrays.append(np.array(dataset[b"labels"], dtype=np.int32))
+        data_arrays.append(np.array(dataset[b"data"], dtype=np.float32))
+        label_arrays.append(np.array(dataset[b"labels"], dtype=np.float32))
 
     combined_data = np.vstack(data_arrays)
     combined_labels = np.hstack(label_arrays)
@@ -62,7 +63,7 @@ def concat_datasets(dataset_paths: List[str]) -> Dict[str, Any]:
 
 
 def create_cifar_model(
-    ffilter_shape: tuple, input_shape: tuple, name: str = "CIFAR_Model"
+    filter_shape: tuple, input_shape: tuple, name: str = "CIFAR_Model"
 ) -> Model:
     """
     Creates a Sequential model for CIFAR-10 image classification.
@@ -94,7 +95,68 @@ def create_cifar_model(
     model.add(Dense(128, activation="relu", name="Dense-2"))
     model.add(Dense(10, activation="softmax", name="Output"))
 
+    # Print model info on console
+    model.summary()
+
+    # Compile the model with categorical_crossentropy loss function, rmsprop optimizer, and categorical_accuracy metrics
+    model.compile(
+        loss="categorical_crossentropy",
+        optimizer="rmsprop",
+        metrics=["categorical_accuracy"],
+    )
+
     return model
+
+
+def train_evaluate_save_cifar_model(
+    model: Model,
+    X_train: np.ndarray,
+    y_train_one_hot: np.ndarray,
+    X_test: np.ndarray,
+    y_test_one_hot: np.ndarray,
+    batch_size: int = 32,
+    name: str = "cifar_model",
+    epochs: int = 20,
+) -> Tuple[Dict[str, list], float, float]:
+    """
+    Train, evaluate, and save the CIFAR-10 image classification model.
+
+    Args:
+        model (Model): The Keras model to be trained and evaluated.
+        X_train (np.ndarray): Input features for training, normalized.
+        y_train_one_hot (np.ndarray): One-hot encoded output values for training.
+        X_test (np.ndarray): Input features for testing, normalized.
+        y_test_one_hot (np.ndarray): One-hot encoded output values for testing.
+        batch_size (int, optional): Batch size for training. Defaults to 32.
+        name (str, optional): Name for saving the model. Defaults to 'cifar_model'.
+        epochs (int, optional): Number of training epochs. Defaults to 20.
+
+    Returns:
+         Tuple[Dict[str, list], float, float]:  Training history object containing recorded metrics
+                                                for each epoch, loss of the model on the test
+                                                dataset, and categorical accuracy of the model on
+                                                the test dataset.
+    """
+
+    # Train the model
+    hist = model.fit(
+        X_train,
+        y_train_one_hot,
+        batch_size=batch_size,
+        epochs=epochs,
+        validation_split=0.1,
+    )
+
+    # Evaluate the model on the test dataset
+    loss, categorical_accuracy = model.evaluate(
+        X_test, y_test_one_hot, batch_size=batch_size, verbose=0
+    )
+
+    # Save the model
+    model.save(f"{name}.h5")
+
+    # Optionally, you might want to return the entire history object and the model's performance metrics
+    return hist.history, loss, categorical_accuracy
 
 
 def main():
@@ -116,17 +178,29 @@ def main():
     ]
 
     # Build the test dataset path(s)
-    y_dataset_paths = [os.path.join(cifar_10_batches_dir, "test_batch")]
+    y_dataset_path = [os.path.join(cifar_10_batches_dir, "test_batch")]
 
     # Load and concatenate training and test datasets
-    X_dataset = concat_datasets(X_dataset_paths)
-    y_dataset = concat_datasets(y_dataset_paths)
+    train_dataset = concat_datasets(X_dataset_paths)
+    test_dataset = concat_datasets(y_dataset_path)
 
     # Separate the input features (X_train) and output values (y_train) of the training dataset
-    X_train, y_train = X_dataset[:, :-1], X_dataset[:, -1]
+    X_train, y_train = train_dataset[:, :-1], train_dataset[:, -1]
 
-    # Separate the input features (X_test) and output values (y_test) of the training dataset
-    X_test, y_test = y_dataset[:, :-1], y_dataset[:, -1]
+    # Separate the input features (X_test) and output values (y_test) of the test dataset
+    X_test, y_test = test_dataset[:, :-1], test_dataset[:, -1]
+
+    # Correct Reshaping to (32, 32, 3)
+    X_train_reshaped = X_train.reshape(-1, 32, 32, 3)
+    X_test_reshaped = X_test.reshape(-1, 32, 32, 3)
+
+    # Normalize pixel values
+    X_train_normalized = X_train_reshaped / 255.0
+    X_test_normalized = X_test_reshaped / 255.0
+
+    # One-hot encode labels
+    y_train_one_hot = to_categorical(y_train, 10)
+    y_test_one_hot = to_categorical(y_test, 10)
 
     # Create CIFAR model instance
     cifar_model = create_cifar_model(filter_shape=(3, 3), input_shape=(32, 32, 3))
