@@ -209,7 +209,9 @@ def get_prediction_images(model, folder_name, ext):
     for path in glob.glob(f"{folder_name}/*.{ext}"):
         img_data = plt.imread(path)
         grayed = np.average(img_data, axis=2, weights=[0.3, 0.59, 0.11]) / 255
-        prediction = model.predict(grayed.reshape(1, 784))
+        # Reshape and replicate across three channels to match the expected input shape
+        grayed_replicated = np.repeat(grayed.reshape(32, 32, 1), 3, axis=2)
+        prediction = model.predict(grayed_replicated.reshape(1, 32, 32, 3))
         print(f"{path}: {np.argmax(prediction)}")
 
 
@@ -290,6 +292,23 @@ def main():
     print("Model Evaluation Metrics:")
     print(f"loss: {loss:.2f}\ncategorical_accuracy: {categorical_accuracy:.2f}")
     print("################################")
+
+    # Dictionary mapping model output indexes to class names
+    class_names = {
+        0: "airplane",
+        1: "automobile",
+        2: "bird",
+        3: "cat",
+        4: "deer",
+        5: "dog",
+        6: "frog",
+        7: "horse",
+        8: "ship",
+        9: "truck",
+    }
+
+    # Print the predicted detection for each individual in the folder
+    get_prediction_images(cifar_model, "test-images", "jpg")
 
 
 if __name__ == "__main__":
