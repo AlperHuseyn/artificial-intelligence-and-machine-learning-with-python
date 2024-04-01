@@ -5,9 +5,11 @@ them, handling both training and test datasets. Additionally, it defines a funct
 a convolutional neural network model for CIFAR-10 image classification.
 """
 
+import glob
 import os
 import pickle
 from typing import List, Dict, Any, Tuple
+import matplotlib.pyplot as plt
 import numpy as np
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
@@ -203,6 +205,14 @@ def plot_metric_graph(hist, metric, title):
     plt.show()
 
 
+def get_prediction_images(model, folder_name, ext):
+    for path in glob.glob(f"{folder_name}/*.{ext}"):
+        img_data = plt.imread(path)
+        grayed = np.average(img_data, axis=2, weights=[0.3, 0.59, 0.11]) / 255
+        prediction = model.predict(grayed.reshape(1, 784))
+        print(f"{path}: {np.argmax(prediction)}")
+
+
 def main():
     # Define the directory containing CIFAR-10 batch files
     cifar_10_batches_dir = os.path.join(
@@ -274,6 +284,12 @@ def main():
     plot_metric_graph(
         hist, metric="categorical_accuracy", title="Epoch-categorical Accuracy Graph"
     )
+
+    # Print the test loss and categorical_accuracy of the trained model
+    print("################################")
+    print("Model Evaluation Metrics:")
+    print(f"loss: {loss:.2f}\ncategorical_accuracy: {categorical_accuracy:.2f}")
+    print("################################")
 
 
 if __name__ == "__main__":
