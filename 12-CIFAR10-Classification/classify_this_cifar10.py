@@ -165,6 +165,44 @@ def train_evaluate_save_cifar_model(
     return hist.history, loss, categorical_accuracy
 
 
+def plot_metric_graph(hist, metric, title):
+    """
+    Plot the training and validation metric as a function of epochs.
+
+    Args:
+        hist (keras.callbacks.History): Training history object.
+        metric (str): Name of the metric to plot.
+        title (str): Title for the plot.
+    """
+    # Create plot with custom styling
+    plt.figure(figsize=(15, 5))
+    plt.plot(
+        hist.epoch,
+        hist.history[metric],
+        linewidth=2,
+        color="blue",
+        label=f"training {metric}",
+    )
+    plt.plot(
+        hist.epoch,
+        hist.history[f"val_{metric}"],
+        linewidth=2,
+        color="orange",
+        label=f"validation {metric}",
+    )
+    plt.title(f"Epochs vs {metric}")
+    plt.xlabel("Epochs")
+    plt.ylabel(metric)
+    plt.grid(alpha=0.5)
+    plt.legend()
+
+    # Save the plot as a JPEG file
+    plt.savefig(f"{title}.jpg", dpi=300, bbox_inches="tight")
+
+    # Show plot
+    plt.show()
+
+
 def main():
     # Define the directory containing CIFAR-10 batch files
     cifar_10_batches_dir = os.path.join(
@@ -229,6 +267,12 @@ def main():
         batch_size=32,
         name="cifar_model",
         epochs=20,
+    )
+
+    # Plot the loss and categoracal accuracy for each epoch during training
+    plot_metric_graph(hist, metric="loss", title="Epoch-Loss Graph")
+    plot_metric_graph(
+        hist, metric="categorical_accuracy", title="Epoch-categorical Accuracy Graph"
     )
 
 
