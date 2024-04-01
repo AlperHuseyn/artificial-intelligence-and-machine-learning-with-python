@@ -62,22 +62,11 @@ def concat_datasets(dataset_paths: List[str]) -> np.ndarray:
     return combined_dataset
 
 
+# Adjust the create_cifar_model function to only return the built model without compiling it
 def create_cifar_model(
     filter_shape: tuple, input_shape: tuple, name: str = "CIFAR_Model"
 ) -> Model:
-    """
-    Creates a Sequential model for CIFAR-10 image classification.
-
-    Parameters:
-        filter_shape (tuple): The dimension of the convolution filters.
-        input_shape (tuple): The shape of the input images.
-        name (str, optional): The name of the model.
-
-    Returns:
-        Model: A compiled Keras model ready for training.
-    """
     model = Sequential(name=name)
-
     model.add(
         Conv2D(
             32,
@@ -95,17 +84,34 @@ def create_cifar_model(
     model.add(Dense(128, activation="relu", name="Dense-2"))
     model.add(Dense(10, activation="softmax", name="Output"))
 
-    # Print model info on console
-    model.summary()
-
-    # Compile the model with categorical_crossentropy loss function, rmsprop optimizer, and categorical_accuracy metrics
-    model.compile(
-        loss="categorical_crossentropy",
-        optimizer="rmsprop",
-        metrics=["categorical_accuracy"],
-    )
-
     return model
+
+
+def compile_and_summarize_model(
+    model: Model,
+    optimizer="rmsprop",
+    loss="categorical_crossentropy",
+    metrics=["categorical_accuracy"],
+) -> None:
+    """
+    Compiles the Keras model with the given parameters and prints its summary.
+
+    Args:
+        model (Model): The Keras model to be compiled.
+        optimizer (str, optional): The name of the optimizer to use. Defaults to 'rmsprop'.
+        loss (str, optional): The loss function to be used. Defaults to 'categorical_crossentropy'.
+        metrics (list, optional): The list of metrics to be evaluated by the model during training
+        and testing. Defaults to ['categorical_accuracy'].
+
+    Returns:
+        None
+    """
+
+    # Compile the model with the specified parameters
+    model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+
+    # Print the model summary to review its architecture
+    model.summary()
 
 
 def train_evaluate_save_cifar_model(
@@ -204,6 +210,26 @@ def main():
 
     # Create CIFAR model instance
     cifar_model = create_cifar_model(filter_shape=(3, 3), input_shape=(32, 32, 3))
+
+    # Compile and summarize the model
+    compile_and_summarize_model(
+        cifar_model,
+        optimizer="rmsprop",
+        loss="categorical_crossentropy",
+        metrics=["categorical_accuracy"],
+    )
+
+    # Train and evaluate the machine learning model using the training and test data
+    hist, loss, categorical_accuracy = train_evaluate_save_cifar_model(
+        cifar_model,
+        X_train_normalized,
+        y_train_one_hot,
+        X_test_normalized,
+        y_test_one_hot,
+        batch_size=32,
+        name="cifar_model",
+        epochs=20,
+    )
 
 
 if __name__ == "__main__":
