@@ -5,6 +5,7 @@ from typing import List, Union, Tuple
 import matplotlib.pyplot as plt
 import numpy as np
 from tensorflow.keras import Sequential
+from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
 from tensorflow.keras.models import Model
 from tensorflow.keras.utils import to_categorical
@@ -107,7 +108,7 @@ def compile_and_summarize_model(
     model.summary()
 
 
-def train_evaluate_save_cifar_model(
+def train_evaluate_save_cifar_model_with_early_stopping(
     model: Model,
     X_train: np.ndarray,
     y_train_one_hot: np.ndarray,
@@ -116,6 +117,8 @@ def train_evaluate_save_cifar_model(
     batch_size: int = 32,
     name: str = "cifar_model",
     epochs: int = 20,
+    patience: int = 3,
+    min_delta: float = 0.0,
 ) -> Tuple[Dict[str, list], float, float]:
     """
     Train, evaluate, and save the CIFAR-10 image classification model.
@@ -129,6 +132,10 @@ def train_evaluate_save_cifar_model(
         batch_size (int, optional): Batch size for training. Defaults to 32.
         name (str, optional): Name for saving the model. Defaults to 'cifar_model'.
         epochs (int, optional): Number of training epochs. Defaults to 20.
+        patience (int, optional): Number of epochs to wait for improvement in val_loss
+        before stopping. Defaults to 3.
+        min_delta (float, optional): Minimum change in the monitored quantity to qualify
+        as an improvement. Defaults to 0.0.
 
     Returns:
          Tuple[Dict[str, list], float, float]:  Training history object containing recorded metrics
@@ -136,6 +143,15 @@ def train_evaluate_save_cifar_model(
                                                 dataset, and categorical accuracy of the model on
                                                 the test dataset.
     """
+    # Initialize EarlyStopping callback
+    early_stopping = EarlyStopping(
+        monitor="val_loss",  # Monitor validation loss
+        patience=patience,  # How many epochs to wait after last time val_loss improved
+        verbose=1,
+        min_delta=min_delta,  # Minimum change to qualify as an improvement
+        mode="min",  # The training will stop when the quantity monitored has stopped decreasing
+        restore_best_weights=True,  # Restore model weights from the epoch with the best value of the monitored quantity.
+    )
 
     # Train the model
     hist = model.fit(
@@ -143,7 +159,8 @@ def train_evaluate_save_cifar_model(
         y_train_one_hot,
         batch_size=batch_size,
         epochs=epochs,
-        validation_split=0.1,
+        validation_split=0.2,
+        callbacks=[early_stopping],
     )
 
     # Evaluate the model on the test dataset
@@ -257,15 +274,17 @@ def main():
     )
 
     # Train and evaluate the machine learning model using the training and test data
-    hist, loss, categorical_accuracy = train_evaluate_save_cifar_model(
-        cifar_model,
-        X_train_normalized,
-        y_train_one_hot,
-        X_test_normalized,
-        y_test_one_hot,
-        batch_size=32,
-        name="cifar_model",
-        epochs=5,
+    hist, loss, categorical_accuracy = (
+        train_evaluate_save_cifar_model_with_early_stopping(
+            cifar_model,
+            X_train_normalized,
+            y_train_one_hot,
+            X_test_normalized,
+            y_test_one_hot,
+            batch_size=32,
+            name="cifar_model",
+            epochs=5,
+        )
     )
 
     # Plot the loss and categoracal accuracy for each epoch during training
