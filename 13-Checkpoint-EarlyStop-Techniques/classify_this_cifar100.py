@@ -152,7 +152,7 @@ def train_evaluate_save_cifar_model(
     )
 
     # Save the model
-    model.save(f"{name}.h5")
+    model.save(os.path.join("model_files", f"{name}.h5"))
 
     # Optionally, you might want to return the entire history object and
     # the model's performance metrics
@@ -191,7 +191,9 @@ def plot_metric_graph(hist, metric, title):
     plt.legend()
 
     # Save the plot as a JPEG file
-    plt.savefig(f"{title}.jpg", dpi=300, bbox_inches="tight")
+    plt.savefig(
+        os.path.join("model_files", f"{title}.jpg", dpi=300, bbox_inches="tight")
+    )
 
     # Show plot
     plt.show()
