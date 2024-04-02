@@ -5,7 +5,7 @@ from typing import List, Union, Tuple
 import matplotlib.pyplot as plt
 import numpy as np
 from tensorflow.keras import Sequential
-from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from tensorflow.keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
 from tensorflow.keras.models import Model
 from tensorflow.keras.utils import to_categorical
@@ -108,7 +108,7 @@ def compile_and_summarize_model(
     model.summary()
 
 
-def train_evaluate_save_cifar_model_with_early_stopping(
+def train_evaluate_save_cifar_model_with_early_stopping_and_checkpoint(
     model: Model,
     X_train: np.ndarray,
     y_train_one_hot: np.ndarray,
@@ -153,6 +153,12 @@ def train_evaluate_save_cifar_model_with_early_stopping(
         restore_best_weights=True,  # Restore model weights from the epoch with the best value of the monitored quantity.
     )
 
+    model_checkpoint = ModelCheckpoint(
+        os.path.join("model_files", "checkpoint.keras"),
+        monitor="val_loss",
+        save_best_only=True,
+    )
+
     # Train the model
     hist = model.fit(
         X_train,
@@ -160,7 +166,7 @@ def train_evaluate_save_cifar_model_with_early_stopping(
         batch_size=batch_size,
         epochs=epochs,
         validation_split=0.2,
-        callbacks=[early_stopping],
+        callbacks=[early_stopping, model_checkpoint],
     )
 
     # Evaluate the model on the test dataset
@@ -275,7 +281,7 @@ def main():
 
     # Train and evaluate the machine learning model using the training and test data
     hist, loss, categorical_accuracy = (
-        train_evaluate_save_cifar_model_with_early_stopping(
+        train_evaluate_save_cifar_model_with_early_stopping_and_checkpoint(
             cifar_model,
             X_train_normalized,
             y_train_one_hot,
