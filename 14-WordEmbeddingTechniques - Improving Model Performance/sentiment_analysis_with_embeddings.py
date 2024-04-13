@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras import Sequential
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-from tensorflow.keras.layers import Embedding, Flatten, Dense
+from tensorflow.keras.layers import Conv1D, Dense, Embedding, Flatten, MaxPooling1D
 from tensorflow.keras.models import Model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import Tokenizer
@@ -42,6 +42,10 @@ def create_IMDB_model(input_dim: int = MAX_VOCAB_SIZE, name=None) -> Sequential:
             name="Embedding",
         )
     )
+    model.add(Conv1D(64, 3, padding="same", activation="relu", name="Conv1D-1"))
+    model.add(MaxPooling1D(2, name="MaxPooling1D-1"))
+    model.add(Conv1D(128, 3, padding="same", activation="relu", name="Conv1D-2"))
+    model.add(MaxPooling1D(2, name="MaxPooling1D-2"))
     model.add(Flatten(name="Flatten"))  # Flatten the output of the Embedding layer
     # Define the architecture of the neural network by adding layers to the model
     # The first two layers each with a ReLU activation function
@@ -67,6 +71,7 @@ def train_evaluate_save_model_(
     y_train_one_hot: np.ndarray,
     X_test: np.ndarray,
     y_test_one_hot: np.ndarray,
+    X_to_predict,
     batch_size: int = 32,
     name: str = "model",
     epochs: int = 20,
@@ -80,6 +85,7 @@ def train_evaluate_save_model_(
     - model: Keras Model, the model to be trained and evaluated.
     - X_train, y_train: training data and labels.
     - X_test, y_test: test data and labels.
+    - X_to_predict: data to be predicted.
     - batch_size: int, batch size for training.
     - name: str, name for saving the model.
     - epochs: int, number of training epochs.
@@ -121,12 +127,15 @@ def train_evaluate_save_model_(
         X_test, y_test_one_hot, batch_size=batch_size, verbose=0
     )
 
+    # Predict review-sentiment from comments
+    predictions = model.predict(X_to_predict)
+
     # Save the model
-    model.save(os.path.join("model_files", f"{name}.h5"))
+    model.save(os.path.join("model_files", f"{name}.keras"))
 
     # Optionally, you might want to return the entire history object and
     # the model's performance metrics
-    return hist, loss, binary_accuracy
+    return hist, loss, binary_accuracy, predictions
 
 
 def plot_metric_graph(hist, metric: str, title: str):
@@ -207,13 +216,14 @@ def main():
     model = create_IMDB_model()
 
     # Train and evaluate the machine learning model using the training and test data
-    hist, loss, binary_accuracy = (
+    hist, loss, binary_accuracy, predictions = (
         train_evaluate_save_model_with_early_stopping_and_checkpoint(
             model,
             X_train,
             y_train,
             X_test,
             y_test,
+            IMDB_data_to_predict_vector,
             batch_size=32,
             name="model",
             epochs=100,
